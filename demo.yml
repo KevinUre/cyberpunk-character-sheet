@@ -1,0 +1,287 @@
+# The configurations that used for the recording, feel free to edit them
+config:
+
+  # Specify a command to be executed
+  # like `/bin/bash -l`, `ls`, or any other commands
+  # the default is bash for Linux
+  # or powershell.exe for Windows
+  command: bash -l
+  
+  # Specify the current working directory path
+  # the default is the current working directory path
+  cwd: /Users/kevinure/Projects/cyberpunk-character-sheet
+  
+  # Export additional ENV variables
+  env:
+    recording: true
+  
+  # Explicitly set the number of columns
+  # or use `auto` to take the current
+  # number of columns of your shell
+  cols: 124
+  
+  # Explicitly set the number of rows
+  # or use `auto` to take the current
+  # number of rows of your shell
+  rows: 38
+  
+  # Amount of times to repeat GIF
+  # If value is -1, play once
+  # If value is 0, loop indefinitely
+  # If value is a positive number, loop n times
+  repeat: 0
+  
+  # Quality
+  # 1 - 100
+  quality: 100
+  
+  # Delay between frames in ms
+  # If the value is `auto` use the actual recording delays
+  frameDelay: auto
+  
+  # Maximum delay between frames in ms
+  # Ignored if the `frameDelay` isn't set to `auto`
+  # Set to `auto` to prevent limiting the max idle time
+  maxIdleTime: 2000
+  
+  # The surrounding frame box
+  # The `type` can be null, window, floating, or solid`
+  # To hide the title use the value null
+  # Don't forget to add a backgroundColor style with a null as type
+  frameBox:
+    type: floating
+    title: Terminalizer
+    style:
+      border: 0px black solid
+      # boxShadow: none
+      # margin: 0px
+  
+  # Add a watermark image to the rendered gif
+  # You need to specify an absolute path for
+  # the image on your machine or a URL, and you can also
+  # add your own CSS styles
+  watermark:
+    imagePath: null
+    style:
+      position: absolute
+      right: 15px
+      bottom: 15px
+      width: 100px
+      opacity: 0.9
+  
+  # Cursor style can be one of
+  # `block`, `underline`, or `bar`
+  cursorStyle: block
+  
+  # Font family
+  # You can use any font that is installed on your machine
+  # in CSS-like syntax
+  fontFamily: "Monaco, Lucida Console, Ubuntu Mono, Monospace"
+  
+  # The size of the font
+  fontSize: 12
+  
+  # The height of lines
+  lineHeight: 1
+  
+  # The spacing between letters
+  letterSpacing: 0
+  
+  # Theme
+  theme:
+    background: "transparent"
+    foreground: "#afafaf"
+    cursor: "#c7c7c7"
+    black: "#232628"
+    red: "#fc4384"
+    green: "#b3e33b"
+    yellow: "#ffa727"
+    blue: "#75dff2"
+    magenta: "#ae89fe"
+    cyan: "#708387"
+    white: "#d5d5d0"
+    brightBlack: "#626566"
+    brightRed: "#ff7fac"
+    brightGreen: "#c8ed71"
+    brightYellow: "#ebdf86"
+    brightBlue: "#75dff2"
+    brightMagenta: "#ae89fe"
+    brightCyan: "#b1c6ca"
+    brightWhite: "#f9f9f4"
+  
+# Records, feel free to edit them
+records:
+  - delay: 100
+    content: "\e[?1034h\r\nThe default interactive shell is now zsh.\r\nTo update your account to use zsh, please run `chsh -s /bin/zsh`.\r\nFor more details, please visit https://support.apple.com/kb/HT208050.\r\n"
+  - delay: 5
+    content: "\e]7;file://Kevins-MacBook-Pro.local/Users/kevinure/Projects/cyberpunk-character-sheet\a"
+  - delay: 18
+    content: "~/Projects/\e[0;93mcyberpunk-character-sheet\e[m$ "
+  - delay: 500
+    content: .
+  - delay: 172
+    content: ' '
+  - delay: 181
+    content: .
+  - delay: 145
+    content: /
+  - delay: 145
+    content: r
+  - delay: 166
+    content: u
+  - delay: 107
+    content: 'n'
+  - delay: 374
+    content: "\r\n\\e[8;38;124t\r\n"
+  - delay: 268
+    content: "\e]0;fuck me\a\e[?1049h\e[?1h\e=\e[1;38r\e[?25l\e[1;1H\e[H\e[2J\e7\e[1;1HInitalizing\e[1CCyberdeck...\e8"
+  - delay: 7
+    content: "\e7\e[2;1H\e[2;1HInitializing\e[1CVirtuality\e[1CGoggles...\e8"
+  - delay: 70
+    content: "\e7\e[2;1H\e[2;36H\e[32mOK\e[m\e[3;1H\e[3;1HConnecting\e[1Cto\e[1Cbiometrics...\e8"
+  - delay: 234
+    content: "\e7\e[3;1H\e[3;29HDone\e[4;1H\e[4;1HInitializing\e[1CInterface\e[1CPlugs...\e8"
+  - delay: 109
+    content: "\e7\e[4;1H\e[4;33H\e[32mOK\e[m\e[5;1H\e[5;1HConnecting\e[1CTo\e[1CNeural\e[1CInterface...\e8"
+  - delay: 130
+    content: "\e7\e[5;1H\e[5;35HConnected\e[6;1H\e[6;1HReading\e[1CSkills\e[1CAssessment\e[1Cfrom\e[1CDatabase...\e8"
+  - delay: 585
+    content: "\e7\e[6;1H\e[6;44HDone\e[7;1H\e[7;1HObtaining\e[1CInventory\e[1CData...\e8"
+  - delay: 458
+    content: "\e7\e[7;1H\e[7;29HDone\e[8;1H\e[8;1HReading\e[1CCyberdeck\e[1CDrive\e[1C0\e[1Cinto\e[1CRAM...\e8"
+  - delay: 440
+    content: "\e7\e[8;1H\e[8;39HDone\e8"
+  - delay: 86
+    content: "\e7\e[9;1H\e[9;1HInitializing\e[1CPrograms\e[1Cto\e[1CRAM...\e8"
+  - delay: 29
+    content: "\e7\e[10;1H\e[10;1HSlot\e[1C1...\e8"
+  - delay: 76
+    content: "\e7\e[10;1H\e[10;11HArmor\e8"
+  - delay: 24
+    content: "\e7\e[11;1H\e[11;1HSlot\e[1C2...\e8"
+  - delay: 69
+    content: "\e7\e[11;1H\e[11;11HSword\e8"
+  - delay: 22
+    content: "\e7\e[12;1H\e[12;1HSlot\e[1C3...\e8"
+  - delay: 64
+    content: "\e7\e[12;1H\e[12;11HSword\e8"
+  - delay: 21
+    content: "\e7\e[13;1H\e[13;1HSlot\e[1C4...\e8"
+  - delay: 56
+    content: "\e7\e[13;1H\e[13;11HSee\e[1CYa\e8"
+  - delay: 23
+    content: "\e7\e[14;1H\e[14;1HSlot\e[1C5...\e8"
+  - delay: 51
+    content: "\e7\e[14;1H\e[14;11HEraser\e8"
+  - delay: 24
+    content: "\e7\e[15;1H\e[15;1HSlot\e[1C6...\e8"
+  - delay: 69
+    content: "\e7\e[16;1H\e[16;1HSlot\e[1C7...\e8"
+  - delay: 63
+    content: "\e7\e[17;1H\e[17;1HSlot\e[1C8...\e8"
+  - delay: 38
+    content: "\e7\e[17;1H\e[17;11H\e[33mBuffer Overflow\e[m\e8"
+  - delay: 22
+    content: "\e7\e[18;1H\e[18;1HSlot\e[1C9...\e8"
+  - delay: 33
+    content: "\e7\e[18;1H\e[18;11H\e[33mBuffer Overflow\e[m\e8"
+  - delay: 23
+    content: "\e7\e[19;1H\e[19;1HSlot\e[1C10...\e8"
+  - delay: 31
+    content: "\e7\e[19;1H\e[19;12H\e[33mBuffer Overflow\e[m\e8"
+  - delay: 24
+    content: "\e7\e[20;1H\e[20;1HSlot\e[1C11...\e8"
+  - delay: 31
+    content: "\e7\e[20;1H\e[20;12H\e[33mBuffer Overflow\e[m\e8"
+  - delay: 23
+    content: "\e7\e[21;1H\e[21;1HSlot\e[1C12...\e8"
+  - delay: 32
+    content: "\e7\e[21;1H\e[21;12H\e[33mBuffer Overflow\e[m\e8"
+  - delay: 13
+    content: "\e7\e[23;1H\e[23;1HLoading\e[1CDeck\e[1CGUI\e8"
+  - delay: 31
+    content: "\e7\e[19;1H\e[24C\e(0lqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqk\e[20;1H\e[20;25Hx\e(B \e[71C\e(0x\e[21;1H\e[21;25Hmqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqj\e(B\e8"
+  - delay: 17
+    content: "\e7\e[20;1H\e[20;26H██\e8"
+  - delay: 22
+    content: "\e7\e[20;1H\e[20;28H███\e8"
+  - delay: 25
+    content: "\e7\e[20;1H\e[20;31H███\e8"
+  - delay: 21
+    content: "\e7\e[20;1H\e[20;34H███\e8"
+  - delay: 21
+    content: "\e7\e[20;1H\e[20;37H███\e8"
+  - delay: 23
+    content: "\e7\e[20;1H\e[20;40H███\e8"
+  - delay: 21
+    content: "\e7\e[20;1H\e[20;43H███\e8"
+  - delay: 23
+    content: "\e7\e[20;1H\e[20;46H███\e8"
+  - delay: 23
+    content: "\e7\e[20;1H\e[20;49H██\e8"
+  - delay: 21
+    content: "\e7\e[20;1H\e[20;51H███\e8"
+  - delay: 21
+    content: "\e7\e[20;1H\e[20;54H███\e8"
+  - delay: 23
+    content: "\e7\e[20;1H\e[20;57H███\e8"
+  - delay: 22
+    content: "\e7\e[20;1H\e[20;60H███\e8"
+  - delay: 23
+    content: "\e7\e[20;1H\e[20;63H███\e8"
+  - delay: 22
+    content: "\e7\e[20;1H\e[20;66H███\e8"
+  - delay: 22
+    content: "\e7\e[20;1H\e[20;69H███\e8"
+  - delay: 23
+    content: "\e7\e[20;1H\e[20;72H██\e8"
+  - delay: 20
+    content: "\e7\e[20;1H\e[20;74H███\e8"
+  - delay: 23
+    content: "\e7\e[20;1H\e[20;77H███\e8"
+  - delay: 21
+    content: "\e7\e[20;1H\e[20;80H███\e8"
+  - delay: 21
+    content: "\e7\e[20;1H\e[20;83H███\e8"
+  - delay: 22
+    content: "\e7\e[20;1H\e[20;86H███\e8"
+  - delay: 22
+    content: "\e7\e[20;1H\e[20;89H███\e8"
+  - delay: 22
+    content: "\e7\e[20;1H\e[20;92H███\e8"
+  - delay: 23
+    content: "\e7\e[20;1H\e[20;95H███\e8"
+  - delay: 22
+    content: "\e7\e[1;1H           \e[1C            \e[2;1H\e[2;1H            \e[1C          \e[1C          \e[1C  \e[3;1H\e[3;1H          \e[1C  \e[1C             \e[1C    \e[4;1H\e[4;1H            \e[1C         \e[1C        \e[1C  \e[5;1H\e[5;1H          \e[1C  \e[1C      \e[1C            \e[1C         \e[6;1H\e[6;1H       \e[1C      \e[1C          \e[1C    \e[1C           \e[1C    \e[7;1H\e[7;1H         \e[1C         \e[1C       \e[1C    \e[8;1H\e[8;1H       \e[1C         \e[1C     \e[1C \e[1C    \e[1C      \e[1C    \e[9;1H\e[9;1H            \e[1C        \e[1C  \e[1C      \e[10;1H\e[10;1H    \e[1C    \e[1C     \e[11;1H\e[11;1H    \e[1C    \e[1C     \e[12;1H\e[12;1H    \e[1C    \e[1C     \e[13;1H\e[13;1H    \e[1C    \e[1C   \e[1C  \e[14;1H\e[14;1H    \e[1C    \e[1C      \e[15;1H\e[15;1H    \e[1C    \e[16;1H\e[16;1H    \e[1C    \e[17;1H\e[17;1H    \e[1C    \e[1C               \e[18;1H\e[18;1H    \e[1C    \e[1C               \e[19;1H\e[19;1H    \e[1C     \e[1C                                                                                       \e[20;1H\e[20;1H    \e[1C     \e[1C                                                                                       \e[21;1H\e[21;1H    \e[1C     \e[1C                                                                                       \e[23;1H\e[23;1H       \e[1C    \e[1C   \e8"
+  - delay: 111
+    content: "\e7\e[1;1H\e[4C\e[90m\e(0lqqqqqqqqqqqqqqqqqqqqqqqwqqqqwqqqqqqqqqqqqqqqqqqqqqqqqqqqwqqqqwqqqqqqqqqqqqqqqqqqqqqqqwqqqqwqqqqqqqqqqqqqqqqqqqqqqwqqqqk\e[m\e[2;1H\e[4C\e[90mx\e[6C\e[m\e(BAccounting\e[7C\e[90m\e(0x\e[1C\e[m\e(B7\e[2C\e[90m\e(0x\e[8C\e[m\e(BCriminology\e[8C\e[90m\e(0x\e[1C\e[m\e(B7\e[2C\e[90m\e(0x\e[5C\e[m\e(BInterrogation\e[5C\e[90m\e(0x\e[1C\e[m\e(B5\e[2C\e[90m\e(0x\e[2C\e[m\e(BPilot\e[1CAir\e[1CVehicle\e[3C\e[90m\e(0x\e[1C\e[m\e(B8\e[2C\e[90m\e(0x\e[m\e[3;1H\e[4C\e[90mtqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqnqqqqu\e[m\e[4;1H\e[4C\e[90mx\e[8C\e[m\e(BActing\e[9C\e[90m\e(0x\e[1C\e[m\e(B5\e[2C\e[90m\e(0x\e[7C\e[m\e(BCryptography\e[8C\e[90m\e(0x\e[1C\e[m\e(B13\e[1C\e[90m\e(0x\e[3C\e[m\e(BLand\e[1CVehicle\e[1CTech\e[3C\e[90m\e(0x\e[1C\e[m\e(B8\e[2C\e[90m\e(0x\e[2C\e[m\e(BPilot\e[1CSea\e[1CVehicle\e[3C\e[90m\e(0x\e[1C\e[m\e(B8\e[2C\e[90m\e(0x\e[m\e[5;1H\e[4C\e[90mtqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqnqqqqu\e[m\e[6;1H\e[4C\e[90mx\e[3C\e[m\e(BAir\e[1CVehicle\e[1CTech\e[4C\e[90m\e(0x\e[1C\e[m\e(B8\e[2C\e[90m\e(0x\e[9C\e[m\e(BCybertech\e[9C\e[90m\e(0x\e[1C\e[m\e(B14\e[1C\e[90m\e(0x\e[3C\e[m\e(BLanguage:\e[1CEnglish\e[3C\e[90m\e(0x\e[1C\e[m\e(B11\e[1C\e[90m\e(0x\e[1C\e[m\e(BResist\e[1CTorture/Drugs\e[1C\e[90m\e(0x\e[1C\e[m\e(B5\e[2C\e[90m\e(0x\e[m\e[7;1H\e[4C\e[90mtqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqnqqqqu\e[m\e[8;1H\e[4C\e[90mx\e[4C\e[m\e(BAnimal\e[1CHandling\e[4C\e[90m\e(0x\e[1C\e[m\e(B7\e[2C\e[90m\e(0x\e[11C\e[m\e(BDance\e[11C\e[90m\e(0x\e[1C\e[m\e(B6\e[2C\e[90m\e(0x\e[1C\e[m\e(BLanguage:\e[1CStreetslang\e[1C\e[90m\e(0x\e[1C\e[m\e(B9\e[2C\e[90m\e(0x\e[8C\e[m\e(BRiding\e[8C\e[90m\e(0x\e[1C\e[m\e(B8\e[2C\e[90m\e(0x\e[m\e[9;1H\e[4C\e[90mtqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqnqqqqu\e[m\e[10;1H\e[4C\e[90mx\e[8C\e[m\e(BArchery\e[8C\e[90m\e(0x\e[1C\e[m\e(B8\e[2C\e[90m\e(0x\e[9C\e[m\e(BDeduction\e[9C\e[90m\e(0x\e[1C\e[m\e(B7\e[2C\e[90m\e(0x\e[4C\e[m\e(BLibrary\e[1CSearch\e[5C\e[90m\e(0x\e[1C\e[m\e(B13\e[1C\e[90m\e(0x\e[3C\e[m\e(BSea\e[1CVehicle\e[1CTech\e[3C\e[90m\e(0x\e[1C\e[m\e(B8\e[2C\e[90m\e(0x\e[m\e[11;1H\e[4C\e[90mtqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqnqqqqu\e[m\e[12;1H\e[4C\e[90mx\e[7C\e[m\e(BAthletics\e[7C\e[90m\e(0x\e[1C\e[m\e(B8\e[2C\e[90m\e(0x\e[8C\e[m\e(BDemolitions\e[8C\e[90m\e(0x\e[1C\e[m\e(B8\e[2C\e[90m\e(0x\e[6C\e[m\e(BLip\e[1CReading\e[6C\e[90m\e(0x\e[1C\e[m\e(B7\e[2C\e[90m\e(0x\e[4C\e[m\e(BShoulder\e[1CArms\e[5C\e[90m\e(0x\e[1C\e[m\e(B8\e[2C\e[90m\e(0x\e[m\e[13;1H\e[4C\e[90mtqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqnqqqqu\e[m\e[14;1H\e[4C\e[90mx\e[7C\e[m\e(BAutofire\e[8C\e[90m\e(0x\e[1C\e[m\e(B8\e[2C\e[90m\e(0x\e[4C\e[m\e(BDrive\e[1CLand\e[1CVehicle\e[5C\e[90m\e(0x\e[1C\e[m\e(B8\e[2C\e[90m\e(0x\e[2C\e[m\e(BLocal\e[1CExpert:\e[1CHome\e[3C\e[90m\e(0x\e[1C\e[m\e(B9\e[2C\e[90m\e(0x\e[7C\e[m\e(BStealth\e[8C\e[90m\e(0x\e[1C\e[m\e(B12\e[1C\e[90m\e(0x\e[m\e[15;1H\e[4C\e[90mtqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqnqqqqu\e[m\e[16;1H\e[4C\e[90mx\e[6C\e[m\e(BBasic\e[1CTech\e[7C\e[90m\e(0x\e[1C\e[m\e(B14\e[1C\e[90m\e(0x\e[9C\e[m\e(BEducation\e[9C\e[90m\e(0x\e[1C\e[m\e(B9\e[2C\e[90m\e(0x\e[5C\e[m\e(BMartial\e[1CArts\e[6C\e[90m\e(0x\e[1C\e[m\e(B6\e[2C\e[90m\e(0x\e[6C\e[m\e(BStreetwise\e[6C\e[90m\e(0x\e[1C\e[m\e(B5\e[2C\e[90m\e(0x\e[m\e[17;1H\e[4C\e[90mtqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqnqqqqu\e[m\e[18;1H\e[4C\e[90mx\e[7C\e[m\e(BBrawling\e[8C\e[90m\e(0x\e[1C\e[m\e(B8\e[2C\e[90m\e(0x\e[1C\e[m\e(BElectronics/Security\e[1CTech\e[1C\e[90m\e(0x\e[1C\e[m\e(B14\e[1C\e[90m\e(0x\e[5C\e[m\e(BMelee\e[1CWeapon\e[6C\e[90m\e(0x\e[1C\e[m\e(B6\e[2C\e[90m\e(0x\e[7C\e[m\e(BTactics\e[8C\e[90m\e(0x\e[1C\e[m\e(B7\e[2C\e[90m\e(0x\e[m\e[19;1H\e[4C\e[90mtqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqnqqqqu\e[m\e[20;1H\e[4C\e[90mx\e[8C\e[m\e(BBribery\e[8C\e[90m\e(0x\e[1C\e[m\e(B5\e[2C\e[90m\e(0x\e[9C\e[m\e(BEndurance\e[9C\e[90m\e(0x\e[1C\e[m\e(B5\e[2C\e[90m\e(0x\e[3C\e[m\e(BPaint/Draw/Sculpt\e[3C\e[90m\e(0x\e[1C\e[m\e(B8\e[2C\e[90m\e(0x\e[7C\e[m\e(BTracking\e[7C\e[90m\e(0x\e[1C\e[m\e(B7\e[2C\e[90m\e(0x\e[m\e[21;1H\e[4C\e[90mtqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqnqqqqu\e[m\e[22;1H\e[4C\e[90mx\e[6C\e[m\e(BBureaucracy\e[6C\e[90m\e(0x\e[1C\e[m\e(B7\e[2C\e[90m\e(0x\e[10C\e[m\e(BEvasion\e[10C\e[90m\e(0x\e[1C\e[m\e(B12\e[1C\e[90m\e(0x\e[7C\e[m\e(BParamedic\e[7C\e[90m\e(0x\e[1C\e[m\e(B8\e[2C\e[90m\e(0x\e[7C\e[m\e(BTrading\e[8C\e[90m\e(0x\e[1C\e[m\e(B5\e[2C\e[90m\e(0x\e[m\e[23;1H\e[4C\e[90mtqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqnqqqqu\e[m\e[24;1H\e[4C\e[90mx\e[7C\e[m\e(BBusiness\e[8C\e[90m\e(0x\e[1C\e[m\e(B7\e[2C\e[90m\e(0x\e[9C\e[m\e(BFirst\e[1CAid\e[9C\e[90m\e(0x\e[1C\e[m\e(B10\e[1C\e[90m\e(0x\e[6C\e[m\e(BPerception\e[7C\e[90m\e(0x\e[1C\e[m\e(B9\e[2C\e[90m\e(0x\e[3C\e[m\e(BWardrobe\e[1C&\e[1CStyle\e[3C\e[90m\e(0x\e[1C\e[m\e(B5\e[2C\e[90m\e(0x\e[m\e[25;1H\e[4C\e[90mtqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqnqqqqu\e[m\e[26;1H\e[4C\e[90mx\e[6C\e[m\e(BComposition\e[6C\e[90m\e(0x\e[1C\e[m\e(B7\e[2C\e[90m\e(0x\e[10C\e[m\e(BForgery\e[10C\e[90m\e(0x\e[1C\e[m\e(B8\e[2C\e[90m\e(0x\e[3C\e[m\e(BPersonal\e[1CGrooming\e[3C\e[90m\e(0x\e[1C\e[m\e(B5\e[2C\e[90m\e(0x\e[5C\e[m\e(BWeaponstech\e[6C\e[90m\e(0x\e[1C\e[m\e(B8\e[2C\e[90m\e(0x\e[m\e[27;1H\e[4C\e[90mtqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqnqqqqu\e[m\e[28;1H\e[4C\e[90mx\e[1C\e[m\e(BConceal/Reveal\e[1CObject\e[1C\e[90m\e(0x\e[1C\e[m\e(B13\e[1C\e[90m\e(0x\e[10C\e[m\e(BGamble\e[11C\e[90m\e(0x\e[1C\e[m\e(B7\e[2C\e[90m\e(0x\e[6C\e[m\e(BPersuasion\e[7C\e[90m\e(0x\e[1C\e[m\e(B7\e[2C\e[90m\e(0x\e[1C\e[m\e(BWilderness\e[1CSurvival\e[2C\e[90m\e(0x\e[1C\e[m\e(B7\e[2C\e[90m\e(0x\e[m\e[29;1H\e[4C\e[90mtqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqnqqqqu\e[m\e[30;1H\e[4C\e[90mx\e[5C\e[m\e(BConcentration\e[5C\e[90m\e(0x\e[1C\e[m\e(B7\e[2C\e[90m\e(0x\e[10C\e[m\e(BHandgun\e[10C\e[90m\e(0x\e[1C\e[m\e(B14\e[1C\e[90m\e(0x\e[3C\e[m\e(BPhotography/Film\e[4C\e[90m\e(0x\e[1C\e[m\e(B8\e[2C\e[90m\e(0x\e[22Cx\e[4Cx\e[m\e[31;1H\e[4C\e[90mtqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqnqqqqu\e[m\e[32;1H\e[4C\e[90mx\e[5C\e[m\e(BContortionist\e[5C\e[90m\e(0x\e[1C\e[m\e(B6\e[2C\e[90m\e(0x\e[7C\e[m\e(BHeavy\e[1CWeapons\e[7C\e[90m\e(0x\e[1C\e[m\e(B8\e[2C\e[90m\e(0x\e[7C\e[m\e(BPick\e[1CLock\e[7C\e[90m\e(0x\e[1C\e[m\e(B12\e[1C\e[90m\e(0x\e[22Cx\e[4Cx\e[m\e[33;1H\e[4C\e[90mtqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqqnqqqqnqqqqqqqqqqqqqqqqqqqqqqnqqqqu\e[m\e[34;1H\e[4C\e[90mx\e[5C\e[m\e(BConversation\e[6C\e[90m\e(0x\e[1C\e[m\e(B6\e[2C\e[90m\e(0x\e[5C\e[m\e(BHuman\e[1CPerception\e[6C\e[90m\e(0x\e[1C\e[m\e(B6\e[2C\e[90m\e(0x\e[6C\e[m\e(BPick\e[1CPocket\e[6C\e[90m\e(0x\e[1C\e[m\e(B8\e[2C\e[90m\e(0x\e[22Cx\e[4Cx\e[m\e[35;1H\e[4C\e[90mmqqqqqqqqqqqqqqqqqqqqqqqvqqqqvqqqqqqqqqqqqqqqqqqqqqqqqqqqvqqqqvqqqqqqqqqqqqqqqqqqqqqqqvqqqqvqqqqqqqqqqqqqqqqqqqqqqvqqqqj\e[m\e(B\e8"
+  - delay: 204
+    content: "\e7\e[1;1H\e(0lq\e(BHP\e(0k\e[2;1H\e[2;1Hx\e[3Cx\e[3;1H\e[3;1Hx\e[3Cx\e[4;1H\e[4;1Hx\e[3Cx\e[5;1H\e[5;1Hx\e[3Cx\e[6;1H\e[6;1Hx\e[3Cx\e[7;1H\e[7;1Hx\e[3Cx\e[8;1H\e[8;1Hx\e[3Cx\e[9;1H\e[9;1Hx\e[3Cx\e[10;1H\e[10;1Hx\e[3Cx\e[11;1H\e[11;1Hx\e[3Cx\e[12;1H\e[12;1Hx\e[3Cx\e[13;1H\e[13;1Hx\e[3Cx\e[14;1H\e[14;1Hx\e[3Cx\e[15;1H\e[15;1Hx\e[3Cx\e[16;1H\e[16;1Hx\e[3Cx\e[17;1H\e[17;1Hx\e[3Cx\e[18;1H\e[18;1Hx\e[3Cx\e[19;1H\e[19;1Hx\e[3Cx\e[20;1H\e[20;1Hx\e[3Cx\e[21;1H\e[21;1Hx\e[3Cx\e[22;1H\e[22;1Hx\e[3Cx\e[23;1H\e[23;1Hx\e(B███\e(0x\e[24;1H\e[24;1Hx\e(B███\e(0x\e[25;1H\e[25;1Hx\e(B███\e(0x\e[26;1H\e[26;1Hx\e(B███\e(0x\e[27;1H\e[27;1Hx\e(B███\e(0x\e[28;1H\e[28;1Hx\e(B███\e(0x\e[29;1H\e[29;1Hx\e(B███\e(0x\e[30;1H\e[30;1Hx\e(B███\e(0x\e[31;1H\e[31;1Hx\e(B███\e(0x\e[32;1H\e[32;1Hmqqqj\e(B\e8"
+  - delay: 208
+    content: "\e7\e[33;1H\e[33;1H\e(0lq\e(BAmmo\e(0k\e[34;1H\e[34;1Hx\e[1C\e(B6/8\e[1C\e(0x\e[35;1H\e[35;1Hmqqqqqj\e(B\e8"
+  - delay: 212
+    content: "\e[37;2H\e[?12l\e[?25h\e7\e[?25l\e[36;1H\e[36;1H\e(0lq\e(Binput\e(0qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqk\e[37;1Hx\e[122Cx\e[38;1Hmqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqj\e(B\e8\e[?12l\e[?25h"
+  - delay: 1732
+    content: "\e[1C\e7\e[?25l\e[37;1H\e[37;2He\e8\e[?12l\e[?25h\e7\e[?25l\e[2;1H\e[2;73H\e[32mInterrogation\e[7C5\e[5CPilot Air Vehicle\e[5C8\e[m\e[4;1H\e[4;71H\e[32mLand Vehicle Tech\e[5C8\e[5CPilot Sea Vehicle\e[5C8\e[m\e[6;1H\e[6;9H\e[32mAir Vehicle Tech\e[6C8\e[12CCybertech\e[11C14\e[5CLanguage: English\e[5C11\e[3CResist Torture/Drugs\e[3C5\e[m\e[8;1H\e[8;46H\e[32mDance\e[13C6\e[4CLanguage: Streetslang\e[3C9\e[m\e[10;1H\e[10;14H\e[32mArchery\e[10C8\e[12CDeduction\e[11C7\e[7CLibrary Search\e[7C13\e[5CSea Vehicle Tech\e[5C8\e[m\e[12;1H\e[12;13H\e[32mAthletics\e[9C8\e[11CDemolitions\e[10C8\e[9CLip Reading\e[8C7\e[7CShoulder Arms\e[7C8\e[m\e[14;1H\e[14;13H\e[32mAutofire\e[10C8\e[7CDrive Land Vehicle\e[7C8\e[5CLocal Expert: Home\e[5C9\e[10CStealth\e[10C12\e[m\e[16;1H\e[16;12H\e[32mBasic Tech\e[9C14\e[11CEducation\e[11C9\e[38CStreetwise\e[8C5\e[m\e[18;1H\e[18;36H\e[32mElectronics/Security Tech\e[3C14\e[7CMelee Weapon\e[8C6\e[m\e[20;1H\e[20;14H\e[32mBribery\e[10C5\e[12CEndurance\e[11C5\e[m\e[22;1H\e[22;12H\e[32mBureaucracy\e[8C7\e[13CEvasion\e[12C12\e[9CParamedic\e[9C8\e[m\e[24;1H\e[24;13H\e[32mBusiness\e[10C7\e[42CPerception\e[9C9\e[6CWardrobe & Style\e[5C5\e[m\e[26;1H\e[26;45H\e[32mForgery\e[12C8\e[6CPersonal Grooming\e[5C5\e[8CWeaponstech\e[8C8\e[m\e[28;1H\e[28;7H\e[32mConceal/Reveal Object\e[3C13\e[12CGamble\e[13C7\e[9CPersuasion\e[9C7\e[4CWilderness Survival\e[4C7\e[m\e[30;1H\e[30;11H\e[32mConcentration\e[7C7\e[m\e[32;1H\e[32;42H\e[32mHeavy Weapons\e[9C8\e[m\e[34;1H\e[34;11H\e[32mConversation\e[8C6\e[8CHuman Perception\e[8C6\e[9CPick Pocket\e[8C8\e[m\e8\e[?12l\e[?25h"
+  - delay: 514
+    content: "\e[1C\e7\e[?25l\e[37;1H\e[37;3Hx\e8\e[?12l\e[?25h\e7\e[?25l\e[2;1H\e[2;73HInterrogation\e[7C5\e[5CPilot Air Vehicle\e[5C8\e[4;1H\e[4;71HLand Vehicle Tech\e[5C8\e[5CPilot Sea Vehicle\e[5C8\e[6;1H\e[6;9HAir Vehicle Tech\e[6C8\e[12CCybertech\e[11C14\e[5CLanguage: English\e[5C11\e[3CResist Torture/Drugs\e[3C5\e[8;1H\e[8;46HDance\e[13C6\e[4CLanguage: Streetslang\e[3C9\e[10;1H\e[10;14HArchery\e[10C8\e[12CDeduction\e[11C7\e[7CLibrary Search\e[7C13\e[5CSea Vehicle Tech\e[5C8\e[12;1H\e[12;13HAthletics\e[9C8\e[11CDemolitions\e[10C8\e[9CLip Reading\e[8C7\e[7CShoulder Arms\e[7C8\e[14;1H\e[14;13HAutofire\e[10C8\e[7CDrive Land Vehicle\e[7C8\e[39CStealth\e[10C12\e[16;1H\e[16;12HBasic Tech\e[9C14\e[11CEducation\e[11C9\e[38CStreetwise\e[8C5\e[18;1H\e[18;36HElectronics/Security Tech\e[3C14\e[7CMelee Weapon\e[8C6\e[20;1H\e[20;14HBribery\e[10C5\e[12CEndurance\e[11C5\e[22;1H\e[22;12HBureaucracy\e[8C7\e[13CEvasion\e[12C12\e[9CParamedic\e[9C8\e[24;1H\e[24;13HBusiness\e[10C7\e[42CPerception\e[9C9\e[6CWardrobe & Style\e[5C5\e[26;1H\e[26;45HForgery\e[12C8\e[6CPersonal Grooming\e[5C5\e[8CWeaponstech\e[8C8\e[28;1H\e[28;7HConceal/Reve"
+  - delay: 7
+    content: "al Object\e[3C13\e[12CGamble\e[13C7\e[9CPersuasion\e[9C7\e[4CWilderness Survival\e[4C7\e[30;1H\e[30;11HConcentration\e[7C7\e[32;1H\e[32;42HHeavy Weapons\e[9C8\e[34;1H\e[34;11HConversation\e[8C6\e[8CHuman Perception\e[8C6\e[9CPick Pocket\e[8C8\e8\e[?12l\e[?25h"
+  - delay: 426
+    content: "\e[1C\e7\e[?25l\e[37;1H\e[37;4Hi\e8\e[?12l\e[?25h\e7\e[?25l\e[14;1H\e[14;70HLocal Expert: Home\e[5C9\e8\e[?12l\e[?25h"
+  - delay: 168
+    content: "\e[1C\e7\e[?25l\e[37;1H\e[37;5Ht\e8\e[?12l\e[?25h"
+  - delay: 498
+    content: "\e[?25l\e[?1l\e>\e[?12l\e[?25h\e[H\e[2J\e[?1049l\e[37;2H\e[?12l\e[?25h"
+  - delay: 18
+    content: "\e]7;file://Kevins-MacBook-Pro.local/Users/kevinure/Projects/cyberpunk-character-sheet\a"
+  - delay: 18
+    content: "~/Projects/\e[0;93mcyberpunk-character-sheet\e[m$ "
+  - delay: 12
+    content: "logout\r\n\r\nSaving session..."
+  - delay: 13
+    content: "\r\n...copying shared history..."
+  - delay: 5
+    content: "\r\n...saving history..."
+  - delay: 9
+    content: "truncating history files...\r\n...completed.\r\n"
