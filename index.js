@@ -363,6 +363,17 @@ const healthBar = blessed.progressbar({
   }
 })
 
+const healthAmount = blessed.box({
+  width: 2,
+  height: 1,
+  top: 1,
+  left: 2,
+  content: 'XX',
+  // style: {
+  //   fg: 'cyan'
+  // }
+})
+
 const armorBox = blessed.box({
   label: 'Armr',
   width: 7,
@@ -492,16 +503,20 @@ function updateArmor() {
 }
 
 function updateHealth() {
+  screen.remove(healthAmount)
   const current = parseInt(healthSheet.data.values[0][0])
   const max = parseInt(healthSheet.data.values[0][1])
   healthBar.filled = current / max * 100
+  healthAmount.setContent(current.toString())
   if (current < max / 2) {
     healthBar.style.bar.fg = 'red'
     healthBar.style.border.fg = 'red'
+    screen.append(healthAmount)
   } 
   else if (current < max) {
     healthBar.style.bar.fg = 'yellow'
     healthBar.style.border.fg = 'white'
+    screen.append(healthAmount)
   } 
   else {
     healthBar.style.bar.fg = 'white'
@@ -996,8 +1011,8 @@ screen.append(helpBox);
 helpBox.toggle();
 
 await delay(200);
-updateHealth();
 screen.append(healthBar);
+updateHealth();
 screen.render();
 
 await delay(200);
