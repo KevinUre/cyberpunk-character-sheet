@@ -247,7 +247,7 @@ const listBox = blessed.listtable({
   style: {
     cell: {
       selected: {
-        bg: 'blue'
+        bg: 'gray'
       }
     }
   }
@@ -396,7 +396,8 @@ const ammoBox = blessed.box({
     right: true,
   },
   style: {
-    border: { fg: 'white' }
+    border: { fg: 'bright-white' },
+    label: { fg: 'bright-white' }
   },
   tags: true,
   content: 'Basic\n 6/8',
@@ -521,7 +522,7 @@ function updateAmmo() {
   if(currentAmmo == 0) {
     ammoBox.style.border.fg = 'red'
   } else {
-    ammoBox.style.border.fg = 'white'
+    ammoBox.style.border.fg = 'bright-white'
   }
   let ammo = currentAmmo.toString();
   if(currentAmmo == 0) {
@@ -529,7 +530,7 @@ function updateAmmo() {
   } else if (currentAmmo < maxAmmo / 2) {
     ammo = `{yellow-fg}${ammo}{/yellow-fg}`
   }
-  ammoBox.setLabel(weaponLabel)
+  ammoBox.setLabel(weaponLabel.padStart(4,'─'))
   ammoBox.setContent(`${ammoType}\n${ammo}/${maxAmmo}`)
 }
 
@@ -734,7 +735,7 @@ async function equip(params) {
   for(let i = 1; i < weaponsSheet.data.values.length; i++) {
     weaponsToList.push([weaponsSheet.data.values[i][1]])
   }
-  listBox.setData([["Ammunition"],...weaponsToList])
+  listBox.setData([["Guns"],...weaponsToList])
   listBox.height = 3 + programsSheet.data.values.length
   const selection = await new Promise((resolve,reject) =>{
     listBox.toggle()
