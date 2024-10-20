@@ -1,79 +1,80 @@
-// const data = [1,2,3]
-// data.push(4)
-// console.log(data)
-// console.log(data.pop())
+import { google } from 'googleapis';
+const sheets = google.sheets('v4');
+import * as fs from 'fs';
 
-const data = [
-    'Concentration',
-'Conceal/Reveal Object',
-'Lip Reading',
-'Perception',
-'Tracking',
-'Athletics',
-'Contortionist',
-'Dance',
-'Endurance',
-'Resist Torture/Drugs',
-'Stealth',
-'Drive Land Vehicle',
-'Pilot Air Vehicle',
-'Pilot Sea Vehicle',
-'Riding',
-'Accounting',
-'Animal Handling',
-'Bureaucracy',
-'Business',
-'Composition',
-'Criminology',
-'Cryptography',
-'Deduction',
-'Education',
-'Gamble',
-'Brawling',
-'Evasion',
-'Martial Arts',
-'Melee Weapon',
-'Archery',
-'Autofire',
-'Handgun',
-'Library Search',
-'Tactics',
-'Wilderness Survival',
-'Acting',
-'Heavy Weapons',
-'Shoulder Arms',
-'Bribery',
-'Conversation',
-'Human Perception',
-'Interrogation',
-'Persuasion',
-'Personal Grooming',
-'Streetwise',
-'Trading',
-'Wardrobe & Style',
-'Air Vehicle Tech',
-'Basic Tech',
-'Cybertech',
-'Demolitions',
-'Electronics/Security Tech',
-'First Aid',
-'Forgery',
-'Land Vehicle Tech',
-'Paint/Draw/Sculpt',
-'Paramedic',
-'Photography/Film',
-'Pick Lock',
-'Pick Pocket',
-'Sea Vehicle Tech',
-'Weaponstech',
-'Language: English',
-'Language: Streetslang',
-'Local Expert: Home',
-]
+// Load the service account key file
+const serviceAccountKeyFile = `./cp-red-valkyrie-b811a5215322.json`;
+const key = JSON.parse(fs.readFileSync(serviceAccountKeyFile));
 
-data.sort();
+// Authenticate the client
+const auth = new google.auth.JWT(
+  key.client_email,
+  null,
+  key.private_key,
+  ['https://www.googleapis.com/auth/spreadsheets'] // Scope for read/write access
+);
 
-console.log(JSON.stringify(data));
+const spreadsheetId = '1b0-tFXS_uABC7HGnLPXoRtf4Cl7JXz1lCWFRWrAZOEo';
 
-// data = ["Accounting","Acting","Air Vehicle Tech","Animal Handling","Archery","Athletics","Autofire","Basic Tech","Brawling","Bribery","Bureaucracy","Business","Composition","Conceal/Reveal Object","Concentration","Contortionist","Conversation","Criminology","Cryptography","Cybertech","Dance","Deduction","Demolitions","Drive Land Vehicle","Education","Electronics/Security Tech","Endurance","Evasion","First Aid","Forgery","Gamble","Handgun","Heavy Weapons","Human Perception","Interrogation","Land Vehicle Tech","Language: English","Language: Streetslang","Library Search","Lip Reading","Local Expert: Home","Martial Arts","Melee Weapon","Paint/Draw/Sculpt","Paramedic","Perception","Personal Grooming","Persuasion","Photography/Film","Pick Lock","Pick Pocket","Pilot Air Vehicle","Pilot Sea Vehicle","Resist Torture/Drugs","Riding","Sea Vehicle Tech","Shoulder Arms","Stealth","Streetwise","Tactics","Tracking","Trading","Wardrobe & Style","Weaponstech","Wilderness Survival"]
-console.log(data.length);
+function sheetFactory (range) {
+  return {
+    data: undefined,
+    fetch: async function() {
+      const result = await sheets.spreadsheets.values.get({
+        auth,
+        spreadsheetId,
+        range
+      })
+      this.data = result.data
+      console.log(JSON.stringify(this))
+    },
+    update: async function() {
+      await sheets.spreadsheets.values.update({
+        auth,
+        spreadsheetId,
+        range,
+        valueInputOption: 'USER_ENTERED',
+        resource: this.data
+      })
+    },
+  }
+}
+
+await auth.authorize();
+let weaponsSheet = sheetFactory(`'Page 1'!Q32:AG38`);
+let ammoSheet = sheetFactory(`'Page 2'!T22:AC25`);
+await weaponsSheet.fetch()
+await ammoSheet.fetch()
+console.log(weaponsSheet.data.values)
+// const loadout = weaponsSheet.data.values[0][0]
+// const weaponName = loadout.split(',')[0]
+// const weaponRowIndex = weaponsSheet.data.values.findIndex((row) => row[1] === weaponName)
+// const weaponRow = weaponsSheet.data.values[weaponRowIndex]
+// const currentAmmo = parseInt(weaponRow[6])
+// const maxAmmo = weaponRow[0].split(',')[2]
+// const gunAmmoTypeCode = weaponRow[0].split(',')[1]
+// const ammoTypeName = loadout.split(',')[1]
+// const ammoTypeIndex = ammoSheet.data.values[0].findIndex((e) => e === ammoTypeName)
+// // unload
+// console.log(`Unloading: ${ammoTypeIndex}`)
+// console.log(ammoSheet.data.values[2][ammoTypeIndex])
+// ammoSheet.data.values[2][ammoTypeIndex] = parseInt(ammoSheet.data.values[2][ammoTypeIndex]) + currentAmmo
+// console.log(ammoSheet.data.values[2][ammoTypeIndex])
+// // pick a type
+// const acceptableAmmos = []
+// for(let i = 0; i < ammoSheet.data.values[0].length; i = i + 2) {
+//   if (ammoSheet.data.values[3][i+1] === gunAmmoTypeCode) {
+//     acceptableAmmos.push([ammoSheet.data.values[0][i]])
+//   }
+// }
+// console.log(acceptableAmmos)
+// const pickedAmmoName = 'Armor Piercing Heavy Pistol Ammo'
+// const newAmmoTypeIndex = ammoSheet.data.values[0].findIndex((e) => e === pickedAmmoName)
+// const amountToLoad = Math.min(parseInt(ammoSheet.data.values[2][newAmmoTypeIndex]),maxAmmo)
+// ammoSheet.data.values[2][newAmmoTypeIndex] = parseInt(ammoSheet.data.values[2][newAmmoTypeIndex]) - amountToLoad
+// weaponsSheet.data.values[weaponRowIndex][6] = amountToLoad
+// weaponsSheet.data.values[0][0] = `${weaponName},${pickedAmmoName}`
+// console.log(ammoSheet.data.values)
+// console.log(weaponsSheet.data.values)
+// weaponsSheet.update()
+// ammoSheet.update()
