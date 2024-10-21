@@ -89,7 +89,7 @@ function delay(ms, always) {
 
 var screen = blessed.screen({
   title: `Valkyrie@0.0.0.0`,
-  // dockBorders: true,
+  dockBorders: true,
   smartCSR: true,
 });
 
@@ -665,8 +665,13 @@ async function fire(params) {
   if(params && !isNaN(params[0])) { amount = Math.min(rateOfFire, parseInt(params[0])) }
   if(params && params[0] == 'auto') { amount = 10 }
   if (amount > currentAmmo) { 
-    notify('Insufficient Ammunition',2500)
-    return 
+    if(!params[0]) {
+      amount = currentAmmo
+    }
+    else {
+      notify('Insufficient Ammunition',2500)
+      return
+    }
   }
   weaponsSheet.data.values[weaponRowIndex][6] = currentAmmo - amount
   updateAmmo()
@@ -860,8 +865,8 @@ async function help() {
 // input.focus();
 
 async function HandleCommand(fullMessage) {
-  const command = fullMessage.split(' ')[0];
-  const params = fullMessage.split(' ').slice(1);
+  const command = fullMessage.trim().split(' ')[0];
+  const params = fullMessage.trim().split(' ').slice(1);
   switch (command.toLowerCase()) {
     case 'exit':
       screen.destroy();
