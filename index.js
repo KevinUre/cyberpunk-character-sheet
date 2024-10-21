@@ -16,6 +16,17 @@ process.argv.forEach(function (val, index, array) {
 });
 
 let isWindows = process.platform === 'win32';
+const theme = {
+  listHighlight: isWindows ? 'blue' : 'gray',
+  detailColorTag: {
+    open: isWindows ? '' : '{gray-fg}',
+    close: isWindows ? '' : '{/gray-fg}',
+  },
+  accentTag: {
+    open: '{bold}',
+    close:  '{/bold}',
+  }
+}
 
 // Load the service account key file
 const serviceAccountKeyFile = `./cp-red-valkyrie-b811a5215322.json`;
@@ -78,7 +89,7 @@ function delay(ms, always) {
 
 var screen = blessed.screen({
   title: `Valkyrie@0.0.0.0`,
-  dockBorders: true,
+  // dockBorders: true,
   smartCSR: true,
 });
 
@@ -219,7 +230,7 @@ const topBar = blessed.box({
 })
 
 const rightBar = blessed.box({
-  height: 35,
+  height: 34,
   width: 1,
   top: 0,
   right: 0,
@@ -249,7 +260,7 @@ const listBox = blessed.listtable({
   style: {
     cell: {
       selected: {
-        bg: isWindows ? 'blue' : 'gray',
+        bg: theme.listHighlight,
       }
     }
   }
@@ -495,12 +506,17 @@ function notify(message, ms) {
 function updateArmor() {
   const head = parseInt(armorSheet.data.values[1][6])
   const body = parseInt(armorSheet.data.values[2][6])
-  let headString = `H:${head.toString().padStart(2)}`
+
+  let headString = head.toString().trim().padStart(2,' ') // alt+255
   if (head < 1) { headString = `{red-fg}${headString}{/red-fg}`}
   else if (head < 8) { headString = `{yellow-fg}${headString}{/yellow-fg}`}
-  let bodyString = `B:${body.toString().padStart(2)}`
+  else { headString = `${theme.detailColorTag.open}${headString}${theme.detailColorTag.close}` }
+  headString = `${theme.detailColorTag.open}H:${theme.detailColorTag.close}${headString}`
+
+  let bodyString = body.toString().trim().padStart(2,' ') // alt+255
   if (body < 1) { bodyString = `{red-fg}${bodyString}{/red-fg}`}
   else if (body < 8) { bodyString = `{yellow-fg}${bodyString}{/yellow-fg}`}
+  bodyString = `B:${theme.accentTag.open}${bodyString}${theme.accentTag.close}`
   armorBox.setContent(`${headString}\n${bodyString}`)
 }
 
@@ -542,14 +558,16 @@ function updateAmmo() {
   } else {
     ammoBox.style.border.fg = 'bright-white'
   }
-  let ammo = currentAmmo.toString();
+  let ammo = `${theme.accentTag.open}${currentAmmo.toString()}${theme.accentTag.close}`;
   if(currentAmmo == 0) {
     ammo = `{red-fg}${ammo}{/red-fg}`
   } else if (currentAmmo < maxAmmo / 2) {
     ammo = `{yellow-fg}${ammo}{/yellow-fg}`
   }
   ammoBox.setLabel(weaponLabel.padStart(4,'─'))
-  ammoBox.setContent(`${ammoType}\n${ammo}/${maxAmmo}`)
+  const typeString = `${theme.detailColorTag.open}${ammoType}${theme.detailColorTag.close}`
+  const maxAmmoString = `${theme.detailColorTag.open}/${maxAmmo}${theme.detailColorTag.close}`
+  ammoBox.setContent(`${typeString}\n${ammo}${maxAmmoString}`)
 }
 
 async function refresh(params, silent) {

@@ -39,14 +39,35 @@ function sheetFactory (range) {
     },
   }
 }
+let isWindows = process.platform === 'win32';
+const theme = {
+  listHighlight: isWindows ? 'blue' : 'gray',
+  detailColorTag: {
+    open: isWindows ? '' : '{gray-fg}',
+    close: isWindows ? '' : '{/gray-fg}',
+  },
+  accentTag: {
+    open: '{bold}',
+    close:  '{/bold}',
+  }
+}
 
 await auth.authorize();
 let armorSheet = sheetFactory(`'Page 1'!A34:G36`);
 await armorSheet.fetch()
 const head = parseInt(armorSheet.data.values[1][6])
 const body = parseInt(armorSheet.data.values[2][6])
-let headString = `H:${head.toString().padStart(2)}`
-let bodyString = `B:${body.toString().padStart(2)}`
+let headString = head.toString().padStart(2)
+if (head < 1) { headString = `{red-fg}${headString}{/red-fg}`}
+else if (head < 8) { headString = `{yellow-fg}${headString}{/yellow-fg}`}
+else { headString = `${theme.detailColorTag.open}${headString}${theme.detailColorTag.close}` }
+headString = `${theme.detailColorTag.open}H:${theme.detailColorTag.close}${headString}`
+
+let bodyString = body.toString().padStart(2,' ')
+if (body < 1) { bodyString = `{red-fg}${bodyString}{/red-fg}`}
+else if (body < 8) { bodyString = `{yellow-fg}${bodyString}{/yellow-fg}`}
+bodyString = `B:${theme.accentTag.open}${bodyString}${theme.accentTag.close}`
+// armorBox.setContent(`${headString}\n${bodyString}`)
 console.log(`'${headString}'`)
 console.log(`'${bodyString}'`)
 // const loadout = weaponsSheet.data.values[0][0]

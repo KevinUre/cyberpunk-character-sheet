@@ -1,5 +1,5 @@
 #! /bin/bash
 
-echo -e '\e[8;38;124t'
+echo -e '\e[8;37;124t'
 
 node index.js
