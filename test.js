@@ -41,11 +41,14 @@ function sheetFactory (range) {
 }
 
 await auth.authorize();
-let weaponsSheet = sheetFactory(`'Page 1'!Q32:AG38`);
-let ammoSheet = sheetFactory(`'Page 2'!T22:AC25`);
-await weaponsSheet.fetch()
-await ammoSheet.fetch()
-console.log(weaponsSheet.data.values)
+let armorSheet = sheetFactory(`'Page 1'!A34:G36`);
+await armorSheet.fetch()
+const head = parseInt(armorSheet.data.values[1][6])
+const body = parseInt(armorSheet.data.values[2][6])
+let headString = `H:${head.toString().padStart(2)}`
+let bodyString = `B:${body.toString().padStart(2)}`
+console.log(`'${headString}'`)
+console.log(`'${bodyString}'`)
 // const loadout = weaponsSheet.data.values[0][0]
 // const weaponName = loadout.split(',')[0]
 // const weaponRowIndex = weaponsSheet.data.values.findIndex((row) => row[1] === weaponName)

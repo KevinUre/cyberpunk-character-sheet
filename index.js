@@ -354,7 +354,7 @@ const healthBar = blessed.progressbar({
   label: 'HP',
   ch: '█',
   width: 5,
-  height: '100%-10',
+  height: '100%-11',
   top: 0,
   left: 0,
   orientation: 'vertical',
@@ -377,11 +377,11 @@ const healthAmount = blessed.box({
 })
 
 const armorBox = blessed.box({
-  label: 'Armr',
-  width: 7,
-  height: 3,
+  label: 'Arm',
+  width: 6,
+  height: 4,
   left: 0,
-  bottom: 3,
+  bottom: 7,
   border: {
     type: 'line',
     top: true,
@@ -400,7 +400,7 @@ const ammoBox = blessed.box({
   width: 7,
   height: 4,
   left: 0,
-  bottom: 6,
+  bottom: 3,
   border: {
     type: 'line',
     top: true,
@@ -495,13 +495,13 @@ function notify(message, ms) {
 function updateArmor() {
   const head = parseInt(armorSheet.data.values[1][6])
   const body = parseInt(armorSheet.data.values[2][6])
-  let headString = head.toString().padStart(2);
+  let headString = `H:${head.toString().padStart(2)}`
   if (head < 1) { headString = `{red-fg}${headString}{/red-fg}`}
   else if (head < 8) { headString = `{yellow-fg}${headString}{/yellow-fg}`}
-  let bodyString = body.toString()//.padStart(2);
+  let bodyString = `B:${body.toString().padStart(2)}`
   if (body < 1) { bodyString = `{red-fg}${bodyString}{/red-fg}`}
   else if (body < 8) { bodyString = `{yellow-fg}${bodyString}{/yellow-fg}`}
-  armorBox.setContent(`${headString}/${bodyString}`)
+  armorBox.setContent(`${headString}\n${bodyString}`)
 }
 
 function updateHealth() {
