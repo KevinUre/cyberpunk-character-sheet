@@ -508,6 +508,7 @@ function updateHealth() {
   const max = parseInt(healthSheet.data.values[0][1])
   healthBar.filled = current / max * 100
   healthAmount.setContent(current.toString())
+  healthAmount.top = Math.ceil((1-current/max)*(healthBar.height-2))
   if (current < max / 2) {
     healthBar.style.bar.fg = 'red'
     healthBar.style.border.fg = 'red'
