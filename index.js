@@ -15,6 +15,8 @@ process.argv.forEach(function (val, index, array) {
   }
 });
 
+let isWindows = process.platform === 'win32';
+
 // Load the service account key file
 const serviceAccountKeyFile = `./cp-red-valkyrie-b811a5215322.json`;
 const key = JSON.parse(fs.readFileSync(serviceAccountKeyFile));
@@ -247,7 +249,7 @@ const listBox = blessed.listtable({
   style: {
     cell: {
       selected: {
-        bg: 'gray'
+        bg: isWindows ? 'blue' : 'gray',
       }
     }
   }
