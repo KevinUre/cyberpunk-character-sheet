@@ -266,7 +266,6 @@ const listBox = blessed.listtable({
   }
 })
 
-
 var skills = [
   ['Accounting', 'P21'],
   ['Acting', 'X23'],
@@ -692,19 +691,55 @@ async function repair(params) {
 }
 
 async function gear(params) {
-  listBox.setData([["Inventory"],...gearSheet.data.values])
-  listBox.height = 3 + gearSheet.data.values.length
-  await new Promise((resolve,reject) =>{
+  if (params && params[0]) {
+    switch (params[0]) {
+      case 'add':
+          if(params[1]) {
+            const newItem = params.slice(1).join(' ');
+            gearSheet.data.values.push([`${newItem}`]);
+            await gearSheet.update();
+            notify(`${newItem} successfully added`,2500);
+          }
+        break;
+      case 'rm':
+      case 'remove':
+        listBox.setData([["Remove which Item?"],...gearSheet.data.values])
+        listBox.height = 3 + gearSheet.data.values.length
+        const result = await new Promise((resolve,reject) =>{
+          listBox.toggle()
+          listBox.focus()
+          screen.render();
+          listBox.once('select', (item, index) => {
+            // Resolve the promise with the selected item and index
+            resolve({ item, index });
+          });
+        })
+        listBox.toggle()
+        screen.render()
+        const itemName = gearSheet.data.values[result.index-1].toString()
+        gearSheet.data.values.splice([result.index-1],1);
+        gearSheet.data.values.push(['']);
+        notify(`removed ${itemName}`,2500)
+        await gearSheet.update();
+        gearSheet.fetch();
+        break;
+    }
+  }
+  else {
+    listBox.setData([["Inventory"],...gearSheet.data.values])
+    listBox.height = 3 + gearSheet.data.values.length
+    await new Promise((resolve,reject) =>{
+      listBox.toggle()
+      listBox.focus()
+      screen.render();
+      listBox.once('select', (item, index) => {
+        // Resolve the promise with the selected item and index
+        resolve({ item, index });
+      });
+    })
     listBox.toggle()
-    listBox.focus()
-    screen.render();
-    listBox.once('select', (item, index) => {
-      // Resolve the promise with the selected item and index
-      resolve({ item, index });
-    });
-  })
-  listBox.toggle()
-  screen.render()
+    screen.render()
+  }
 }
 
 async function programs(params) {
