@@ -1,6 +1,7 @@
 import { google } from 'googleapis';
 const sheets = google.sheets('v4');
 import * as fs from 'fs';
+import figlet from 'figlet';
 
 // Load the service account key file
 const serviceAccountKeyFile = `./cp-red-valkyrie-b811a5215322.json`;
@@ -40,10 +41,17 @@ function sheetFactory (range) {
   }
 }
 
-await auth.authorize();
-let gearSheet = sheetFactory(`'Page 2'!P3:R21`);
-await gearSheet.fetch();
-// gearSheet.data.values.splice([6],1);
-// gearSheet.data.values.push([''])
-// gearSheet.update()
-console.log(gearSheet.data.values)
+// await auth.authorize();
+// let gearSheet = sheetFactory(`'Page 2'!P3:R21`);
+// await gearSheet.fetch();
+// // gearSheet.data.values.splice([6],1);
+// // gearSheet.data.values.push([''])
+// // gearSheet.update()
+// console.log(gearSheet.data.values)
+let text = figlet.textSync('45', {
+  font: "Ghost",
+})
+text = text.split('\n').slice(2).join('\n')
+fs.writeFileSync('./ascii.txt',text)
+// console.log(trimmed)
+// console.log(figlet.fontsSync());

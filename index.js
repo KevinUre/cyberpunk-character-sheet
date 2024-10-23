@@ -7,6 +7,7 @@ import 'dotenv/config'
 import { google } from 'googleapis';
 const sheets = google.sheets('v4');
 import * as fs from 'fs';
+import figlet from 'figlet';
 
 let quickMode = false;
 process.argv.forEach(function (val, index, array) {
@@ -72,6 +73,7 @@ let weaponsSheet = sheetFactory(`'Page 1'!Q32:AG38`);
 let ammoSheet = sheetFactory(`'Page 2'!T22:AC25`);
 let gearSheet = sheetFactory(`'Page 2'!P3:R21`);
 let programsSheet = sheetFactory(`'Page 3'!S4:S16`);
+let moneySheet = sheetFactory(`'Page 2'!AB2:AC2`);
 
 function letterToColumn(letter) {
   let column = 0;
@@ -171,6 +173,25 @@ var errorBox = blessed.box({
 })
 
 var helpBox = blessed.box({
+  left: 'center',
+  top: 'center',
+  height: 'shrink',
+  width:'shrink',
+  content: '',
+  border: {
+    type: 'line',
+    top: true,
+    bottom: true,
+    left: true,
+    right: true,
+  },
+  tags: true,
+  align: 'left',
+  interactive: true,
+  vi: true,
+})
+
+var cashBox = blessed.box({
   left: 'center',
   top: 'center',
   height: 'shrink',
@@ -583,6 +604,7 @@ async function refresh(params, silent) {
   await ammoSheet.fetch();
   updateAmmo();
   await gearSheet.fetch();
+  await moneySheet.fetch();
   await healthSheet.fetch();
   updateHealth();
   await programsSheet.fetch();
@@ -897,6 +919,28 @@ async function help() {
   })
 }
 
+async function cash(params) {
+  if(params && params[0] && !isNaN(params[0])) {
+    const amount = parseInt(params[0])
+    moneySheet.data.values[0][0] = (parseInt(moneySheet.data.values[0][0])+amount).toString()
+    moneySheet.update()
+  }
+  cashBox.setContent(figlet.textSync(moneySheet.data.values[0][0],{ font: 'Ghost' }).split('\n').slice(2).join('\n'))
+  await new Promise((resolve,reject) =>{
+    cashBox.toggle()
+    cashBox.focus()
+    cashBox.render();
+    setTimeout(() => {
+      screen.once('keypress', () => {
+        // Resolve the promise with the selected item and index
+        cashBox.toggle()
+        screen.render()
+        resolve();
+    }, 500);
+    });
+  })
+}
+
 // input.focus();
 
 async function HandleCommand(fullMessage) {
@@ -945,6 +989,11 @@ async function HandleCommand(fullMessage) {
     case 'help':
       await help(params);
       break;
+    case 'cash':
+    case 'money':
+    case 'eb':
+      await cash(params);
+      break;
   }
 }
 
@@ -967,6 +1016,7 @@ await sheet1.loadCells('A1:AG39');
 await animate(`Done\nObtaining Inventory Data... `, 10)
 await ammoSheet.fetch();
 await gearSheet.fetch();
+await moneySheet.fetch();
 await animate(`Done\nReading Cyberdeck Drive 0 into RAM... `, 10)
 await programsSheet.fetch();
 await animate(`Done\n`, 70)
@@ -1070,6 +1120,8 @@ screen.append(listBox);
 listBox.toggle();
 screen.append(helpBox);
 helpBox.toggle();
+screen.append(cashBox);
+cashBox.toggle();
 
 await delay(200);
 screen.append(healthBar);
