@@ -67,7 +67,7 @@ function sheetFactory (range) {
   }
 }
 
-let healthSheet = sheetFactory(`'Page 1'!D28:E28`);
+let healthSheet = sheetFactory(`'Page 1'!D28:F28`);
 let armorSheet = sheetFactory(`'Page 1'!A34:G36`);
 let weaponsSheet = sheetFactory(`'Page 1'!Q32:AG38`);
 let ammoSheet = sheetFactory(`'Page 2'!T22:AC25`);
@@ -286,6 +286,58 @@ const listBox = blessed.listtable({
     }
   }
 })
+
+const criticalInjuriesBox = blessed.listtable({
+  height: 3,
+  // width: 50,
+  top: 'center',
+  left: 'center',
+  keys: true,
+  width: '100%-6',
+  // width: 'shrink',
+  // height: 'shrink',
+  border: {
+    type: 'line',
+    top: true,
+    bottom: true,
+    left: true,
+    right: true,
+  },
+  interactive: true,
+  vi: true,
+  style: {
+    cell: {
+      selected: {
+        bg: theme.listHighlight,
+      }
+    }
+  }
+})
+
+const criticalInjuriesMaster = [
+  ['2','Dismembered Arm','Arm is gone, drop anything held. +1 to Death Save','---', 'S17'],
+  ['3','Dismembered Hand','Hand is gone, drop anything help. +1 to Death Save','---', 'S17'],
+  ['4','Collapsed Lung','-2 MOVE','P15','S15'],
+  ['5','Broken Ribs','If you move more than 4m suffer 5 direct damage','P13','P15,S13'],
+  ['6','Broken Arm','Arm cannot be used, drop held items','P13','P15,S13'],
+  ['7','Foreign Object','If you move more than 4m suffer 5 direct damage','F13,P13','<--'],
+  ['8','Broken Leg','-4 MOVE','P13','P15,S13'],
+  ['9','Torn Muscle','-2 to Melee Attacks','F13,P13','<--'],
+  ['10','Spinal Injury','Next turn you have no action. +1 to Death Save','P15','S15'],
+  ['11','Crushed Fingers','-4 to any action invokving the hand','P13','S15'],
+  ['12','Dismembered Leg','Leg is gone. -6 to MOVE. Cant dodge attacks. +1 to Death Save','---','S17'],
+  ['2','Lost Eye','Eye is gone. -4 to Ranged Attacks and vision based Perception','---','S17'],
+  ['3','Brain Injury','-2 to all actions. +1 to Death Save','---','S17'],
+  ['4','Damaged Eye','-2 to Ranged Attacks and vision based Perception','P15','S13'],
+  ['5','Concussion','-2 to all actions','F13,P13','<--'],
+  ['6','Broken Jaw','-4 to all actions involving speech','P13','P13,S13'],
+  ['7','Foreign Object','If you move more than 4m suffer 5 direct damage','F13,P13','<--'],
+  ['8','Whiplash','+1 to Death Save','P13','P13,S13'],
+  ['9','Cracked Skull','Aimed shots against the head to their damage x3. +1 to Death Save','P15','P15,S15'],
+  ['10','Damaged Ear','If you move more than 4m you cant move next turn. -2 to hearing based Perception','P13','S13'],
+  ['11','Crushed Windpipe','You cannot speak. +1 to Death Save','---','S15'],
+  ['12','Lost Ear','If you move > 4m you cant move next turn. -4 to Perception. +1 to Death Save','---','S17'],
+]
 
 var skills = [
   ['Accounting', 'P21'],
@@ -941,6 +993,97 @@ async function cash(params) {
   })
 }
 
+async function critical(params){
+  if (params && params[0]) {
+    let currentInjuryNames = []
+    if (healthSheet.data.values[0][2]) { currentInjuryNames = healthSheet.data.values[0][2].split('\n') }
+    let result
+    let currentInjuries = []
+    switch (params[0]) {
+      case 'add':
+        const availableInjuries = criticalInjuriesMaster.filter((row) => !currentInjuryNames.includes(row[1]))
+        criticalInjuriesBox.setData([['#','Name','Effect','Fix','Treat'],...availableInjuries])
+        criticalInjuriesBox.height = 3 + availableInjuries.length
+        result = await new Promise((resolve,reject) =>{
+          criticalInjuriesBox.toggle()
+          criticalInjuriesBox.focus()
+          screen.render();
+          criticalInjuriesBox.once('select', (item, index) => {
+            // Resolve the promise with the selected item and index
+            resolve({ item, index });
+          });
+        })
+        criticalInjuriesBox.toggle()
+        screen.render()
+        const newInjury = availableInjuries[result.index-1]
+        currentInjuryNames.push(newInjury[1])
+        healthSheet.data.values[0][2] = currentInjuryNames.join('\n')
+        notify(`added ${newInjury[1]}`,2500)
+        healthSheet.update()
+        break;
+      case 'rm':
+      case 'remove':
+        currentInjuries = criticalInjuriesMaster.filter((row) => currentInjuryNames.includes(row[1]))
+        criticalInjuriesBox.setData([['#','Name','Effect','Fix','Treat'],...currentInjuries])
+        criticalInjuriesBox.height = 3 + currentInjuries.length
+        result = await new Promise((resolve,reject) =>{
+          criticalInjuriesBox.toggle()
+          criticalInjuriesBox.focus()
+          screen.render();
+          criticalInjuriesBox.once('select', (item, index) => {
+            // Resolve the promise with the selected item and index
+            resolve({ item, index });
+          });
+        })
+        criticalInjuriesBox.toggle()
+        screen.render()
+        if(result.index > 0) {
+          const toBeRemoved = currentInjuryNames[result.index-1].toString()
+          currentInjuryNames.splice([result.index-1],1);
+          healthSheet.data.values[0][2] = currentInjuryNames.join('\n')
+          notify(`removed ${toBeRemoved}`,2500)
+          healthSheet.update();
+        }
+        break;
+      case 'list':
+      case 'show':
+        currentInjuries = criticalInjuriesMaster.filter((row) => currentInjuryNames.includes(row[1]))
+        criticalInjuriesBox.setData([['#','Name','Effect','Fix','Treat'],...currentInjuries])
+        criticalInjuriesBox.height = 3 + currentInjuries.length
+        await new Promise((resolve,reject) =>{
+          criticalInjuriesBox.toggle()
+          criticalInjuriesBox.focus()
+          screen.render();
+          criticalInjuriesBox.once('select', (item, index) => {
+            // Resolve the promise with the selected item and index
+            resolve({ item, index });
+          });
+        })
+        criticalInjuriesBox.toggle()
+        screen.render()
+        break;
+      case 'all':
+        criticalInjuriesBox.setData([['#','Name','Effect','Fix','Treat'],...criticalInjuriesMaster])
+        criticalInjuriesBox.height = 3 + criticalInjuriesMaster.length
+        await new Promise((resolve,reject) =>{
+          criticalInjuriesBox.toggle()
+          criticalInjuriesBox.focus()
+          screen.render();
+          criticalInjuriesBox.once('select', (item, index) => {
+            // Resolve the promise with the selected item and index
+            resolve({ item, index });
+          });
+        })
+        criticalInjuriesBox.toggle()
+        screen.render()
+        break;
+    }
+  }
+  else {
+    
+  }
+}
+
 // input.focus();
 
 async function HandleCommand(fullMessage) {
@@ -994,6 +1137,9 @@ async function HandleCommand(fullMessage) {
     case 'eb':
       await cash(params);
       break;
+    case 'crit':
+      await critical(params);
+      break;
   }
 }
 
@@ -1006,9 +1152,9 @@ await animate(`{green-fg}OK{/green-fg}\nConnecting to biometrics... `, 20)
 await healthSheet.fetch();
 await animate(`Done\nInitializing Interface Plugs... `, 0)
 await armorSheet.fetch();
-await animate(`{green-fg}OK{/green-fg}\nConnecting To Neural Interface... `, 100)
+await animate(`{green-fg}OK{/green-fg}\nConnecting To Neural Interface... `, 30)
 await weaponsSheet.fetch();
-await animate(`Connected\nReading Skills Assessment from Database... `, 120)
+await animate(`Connected\nReading Skills Assessment from Database... `, 30)
 const doc = new GoogleSpreadsheet('1b0-tFXS_uABC7HGnLPXoRtf4Cl7JXz1lCWFRWrAZOEo', { apiKey: process.env.APIKEY })
 await doc.loadInfo();
 const sheet1 = doc.sheetsByIndex[0];
@@ -1136,6 +1282,8 @@ screen.render();
 await delay(200);
 updateArmor();
 screen.append(armorBox);
+screen.append(criticalInjuriesBox);
+criticalInjuriesBox.toggle();
 screen.render();
 
 await delay(200);
