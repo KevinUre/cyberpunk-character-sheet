@@ -71,7 +71,7 @@ let healthSheet = sheetFactory(`'Page 1'!D28:F28`);
 let armorSheet = sheetFactory(`'Page 1'!A34:G36`);
 let weaponsSheet = sheetFactory(`'Page 1'!Q32:AG38`);
 let ammoSheet = sheetFactory(`'Page 2'!T22:AC25`);
-let gearSheet = sheetFactory(`'Page 2'!P3:R21`);
+let gearSheet = sheetFactory(`'Page 2'!P3:P21`);
 let programsSheet = sheetFactory(`'Page 3'!S4:S16`);
 let moneySheet = sheetFactory(`'Page 2'!AB2:AC2`);
 
@@ -709,6 +709,7 @@ async function damage(params) {
   if (brain) { armor = 0 }
   if (armor <= incoming) {
     let damage = incoming - armor
+    if(headShot) { damage = damage * 2 }
     healthSheet.data.values[0][0] = `${Math.max(0,current-damage)}`
     if (!brain) {
       if (headShot) { 
