@@ -520,9 +520,9 @@ var inputBox = blessed.textbox({
   // content: inputPrompt,
 })
 
-screen.key(['escape', 'q', 'C-c'], function (ch, key) {
-  return process.exit(0);
-});
+// screen.key(['escape', 'q', 'C-c'], function (ch, key) {
+//   return process.exit(0);
+// });
 
 inputBox.on('submit', async (prompt) => {
   await HandleCommand(prompt);
@@ -784,19 +784,29 @@ async function gear(params) {
           listBox.toggle()
           listBox.focus()
           screen.render();
-          listBox.once('select', (item, index) => {
-            // Resolve the promise with the selected item and index
-            resolve({ item, index });
-          });
+          const selectHandler = (item, index) => { 
+            listBox.removeListener('select', selectHandler)
+            listBox.removeListener('q', exitHandler)
+            resolve({ item, index }) 
+          }
+          const exitHandler = () => { 
+            listBox.removeListener('select', selectHandler)
+            listBox.removeListener('q', exitHandler)
+            resolve(null) 
+          }
+          listBox.once('select', selectHandler);
+          listBox.key('q', exitHandler);
         })
         listBox.toggle()
         screen.render()
-        const itemName = gearSheet.data.values[result.index-1].toString()
-        gearSheet.data.values.splice([result.index-1],1);
-        gearSheet.data.values.push(['']);
-        notify(`removed ${itemName}`,2500)
-        await gearSheet.update();
-        gearSheet.fetch();
+        if(result) {
+          const itemName = gearSheet.data.values[result.index-1].toString()
+          gearSheet.data.values.splice([result.index-1],1);
+          gearSheet.data.values.push(['']);
+          notify(`removed ${itemName}`,2500)
+          await gearSheet.update();
+          gearSheet.fetch();
+        }
         break;
     }
   }
@@ -843,8 +853,6 @@ async function reload(params) {
   const gunAmmoTypeCode = weaponRow[0].split(',')[1]
   const ammoTypeName = loadout.split(',')[1]
   const ammoTypeIndex = ammoSheet.data.values[0].findIndex((e) => e === ammoTypeName)
-  // unload
-  ammoSheet.data.values[2][ammoTypeIndex] = parseInt(ammoSheet.data.values[2][ammoTypeIndex])+currentAmmo
   // pick a type
   const acceptableAmmos = []
   for(let i = 0; i < ammoSheet.data.values[0].length; i = i + 2) {
@@ -858,27 +866,39 @@ async function reload(params) {
     listBox.toggle()
     listBox.focus()
     screen.render();
-    listBox.once('select', (item, index) => {
-      // Resolve the promise with the selected item and index
-      resolve({ item, index });
-    });
+    const selectHandler = (item, index) => { 
+      listBox.removeListener('select', selectHandler)
+      listBox.removeListener('q', exitHandler)
+      resolve({ item, index }) 
+    }
+    const exitHandler = () => { 
+      listBox.removeListener('select', selectHandler)
+      listBox.removeListener('q', exitHandler)
+      resolve(null) 
+    }
+    listBox.once('select', selectHandler);
+    listBox.key('q', exitHandler);
   })
   listBox.toggle()
   screen.render()
-  const pickedAmmoName = selection.item.getText().trim(' ')
-  // load
-  const newAmmoTypeIndex = ammoSheet.data.values[0].findIndex((e) => e === pickedAmmoName)
-  const amountToLoad = Math.min(parseInt(ammoSheet.data.values[2][newAmmoTypeIndex]),maxAmmo)
-  ammoSheet.data.values[2][newAmmoTypeIndex] = parseInt(ammoSheet.data.values[2][newAmmoTypeIndex]) - amountToLoad
-  weaponsSheet.data.values[weaponRowIndex][6] = amountToLoad
-  weaponsSheet.data.values[0][0] = `${weaponName},${pickedAmmoName}`
-  const choppedLoadout = weaponsSheet.data.values[weaponRowIndex][0].split(',')
-  choppedLoadout.pop()
-  weaponsSheet.data.values[weaponRowIndex][0] = `${choppedLoadout.join(',')},${newAmmoTypeIndex}`
-  // notify(`pickedItem:${JSON.stringify(weaponsSheet.data.values[0][0])}`,5000)
-  updateAmmo()
-  weaponsSheet.update()
-  ammoSheet.update()
+  if(selection) {
+    // unload
+    ammoSheet.data.values[2][ammoTypeIndex] = parseInt(ammoSheet.data.values[2][ammoTypeIndex])+currentAmmo
+    // load
+    const pickedAmmoName = selection.item.getText().trim(' ')
+    const newAmmoTypeIndex = ammoSheet.data.values[0].findIndex((e) => e === pickedAmmoName)
+    const amountToLoad = Math.min(parseInt(ammoSheet.data.values[2][newAmmoTypeIndex]),maxAmmo)
+    ammoSheet.data.values[2][newAmmoTypeIndex] = parseInt(ammoSheet.data.values[2][newAmmoTypeIndex]) - amountToLoad
+    weaponsSheet.data.values[weaponRowIndex][6] = amountToLoad
+    weaponsSheet.data.values[0][0] = `${weaponName},${pickedAmmoName}`
+    const choppedLoadout = weaponsSheet.data.values[weaponRowIndex][0].split(',')
+    choppedLoadout.pop()
+    weaponsSheet.data.values[weaponRowIndex][0] = `${choppedLoadout.join(',')},${newAmmoTypeIndex}`
+    // notify(`pickedItem:${JSON.stringify(weaponsSheet.data.values[0][0])}`,5000)
+    updateAmmo()
+    weaponsSheet.update()
+    ammoSheet.update()
+  }
 }
 
 async function equip(params) {
@@ -892,21 +912,31 @@ async function equip(params) {
     listBox.toggle()
     listBox.focus()
     screen.render();
-    listBox.once('select', (item, index) => {
-      // Resolve the promise with the selected item and index
-      resolve({ item, index });
-    });
+    const selectHandler = (item, index) => { 
+      listBox.removeListener('select', selectHandler)
+      listBox.removeListener('q', exitHandler)
+      resolve({ item, index }) 
+    }
+    const exitHandler = () => { 
+      listBox.removeListener('select', selectHandler)
+      listBox.removeListener('q', exitHandler)
+      resolve(null) 
+    }
+    listBox.once('select', selectHandler);
+    listBox.key('q', exitHandler);
   })
   listBox.toggle()
   screen.render()
-  const pickedWeaponName = selection.item.getText().trim(' ')
-  const weaponRowIndex = weaponsSheet.data.values.findIndex((row) => row[1] === pickedWeaponName)
-  const weaponRow = weaponsSheet.data.values[weaponRowIndex]
-  const currentAmmoIndex = parseInt(weaponRow[0].split(',')[3])
-  const ammoName = ammoSheet.data.values[0][currentAmmoIndex]
-  weaponsSheet.data.values[0][0] = `${pickedWeaponName},${ammoName}`
-  weaponsSheet.update()
-  updateAmmo()
+  if (selection) {
+    const pickedWeaponName = selection.item.getText().trim(' ')
+    const weaponRowIndex = weaponsSheet.data.values.findIndex((row) => row[1] === pickedWeaponName)
+    const weaponRow = weaponsSheet.data.values[weaponRowIndex]
+    const currentAmmoIndex = parseInt(weaponRow[0].split(',')[3])
+    const ammoName = ammoSheet.data.values[0][currentAmmoIndex]
+    weaponsSheet.data.values[0][0] = `${pickedWeaponName},${ammoName}`
+    weaponsSheet.update()
+    updateAmmo()
+  }
 }
 
 async function ammo() {
@@ -946,16 +976,19 @@ async function help() {
   helpText += `hit <#> [head | brain] - applies a hit to the body or given\n`
   helpText += `      area, considering and modifying armor as required\n`
   helpText += `      aliases: damage; dmg\n`
+  helpText += `crit add | rm | list | all - CRUD for critical injuries\n`
   helpText += `heal [<#> | full] - heals the given amount\n`
   helpText += `repair [head | all] - fully repairs the body or given armor\n`
   helpText += `fire [<#> | auto] - lowers ammo by RoF or given number\n`
   helpText += `      aliases: shoot\n`
   helpText += `equip - select a gun to be equipped\n`
   helpText += `reload - reloads the equipped gun with the selected ammo\n`
-  helpText += `gear - iterates non-combat physical inventory\n`
+  helpText += `gear [add | rm] - CRUD for non-combat physical inventory\n`
   helpText += `programs - iterates contents of cyberdeck\n`
   helpText += `      aliases: prog; progs; grams\n`
-  helpText += `ammo - iterates all ammo including currently loaded in guns`
+  helpText += `ammo - iterates all ammo including currently loaded in guns\n`
+  helpText += `cash [<#>] - display or change current money\n`
+  helpText += `      aliases: money; eb`
   helpBox.setContent(helpText)
   await new Promise((resolve,reject) =>{
     helpBox.toggle()
@@ -1009,18 +1042,28 @@ async function critical(params){
           criticalInjuriesBox.toggle()
           criticalInjuriesBox.focus()
           screen.render();
-          criticalInjuriesBox.once('select', (item, index) => {
-            // Resolve the promise with the selected item and index
-            resolve({ item, index });
-          });
+          const selectHandler = (item, index) => { 
+            criticalInjuriesBox.removeListener('select', selectHandler)
+            criticalInjuriesBox.removeListener('q', exitHandler)
+            resolve({ item, index }) 
+          }
+          const exitHandler = () => { 
+            criticalInjuriesBox.removeListener('select', selectHandler)
+            criticalInjuriesBox.removeListener('q', exitHandler)
+            resolve(null) 
+          }
+          criticalInjuriesBox.once('select', selectHandler);
+          criticalInjuriesBox.key('q', exitHandler);
         })
         criticalInjuriesBox.toggle()
         screen.render()
-        const newInjury = availableInjuries[result.index-1]
-        currentInjuryNames.push(newInjury[1])
-        healthSheet.data.values[0][2] = currentInjuryNames.join('\n')
-        notify(`added ${newInjury[1]}`,2500)
-        healthSheet.update()
+        if (result) {
+          const newInjury = availableInjuries[result.index-1]
+          currentInjuryNames.push(newInjury[1])
+          healthSheet.data.values[0][2] = currentInjuryNames.join('\n')
+          notify(`added ${newInjury[1]}`,2500)
+          healthSheet.update()
+        }
         break;
       case 'rm':
       case 'remove':
@@ -1031,14 +1074,22 @@ async function critical(params){
           criticalInjuriesBox.toggle()
           criticalInjuriesBox.focus()
           screen.render();
-          criticalInjuriesBox.once('select', (item, index) => {
-            // Resolve the promise with the selected item and index
-            resolve({ item, index });
-          });
+          const selectHandler = (item, index) => { 
+            criticalInjuriesBox.removeListener('select', selectHandler)
+            criticalInjuriesBox.removeListener('q', exitHandler)
+            resolve({ item, index }) 
+          }
+          const exitHandler = () => { 
+            criticalInjuriesBox.removeListener('select', selectHandler)
+            criticalInjuriesBox.removeListener('q', exitHandler)
+            resolve(null) 
+          }
+          criticalInjuriesBox.once('select', selectHandler);
+          criticalInjuriesBox.key('q', exitHandler);
         })
         criticalInjuriesBox.toggle()
         screen.render()
-        if(result.index > 0) {
+        if(result && result.index > 0) {
           const toBeRemoved = currentInjuryNames[result.index-1].toString()
           currentInjuryNames.splice([result.index-1],1);
           healthSheet.data.values[0][2] = currentInjuryNames.join('\n')
