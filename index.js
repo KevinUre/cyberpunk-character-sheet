@@ -749,6 +749,7 @@ async function fire(params) {
   }
   weaponsSheet.data.values[weaponRowIndex][6] = currentAmmo - amount
   updateAmmo()
+  screen.render()
   weaponsSheet.update()
 }
 
@@ -761,8 +762,9 @@ async function repair(params) {
   } else {
     armorSheet.data.values[2][6] = armorSheet.data.values[2][0]
   }
-  await armorSheet.update()
+  armorSheet.update()
   updateArmor()
+  screen.render()
 }
 
 async function gear(params) {
@@ -896,6 +898,7 @@ async function reload(params) {
     weaponsSheet.data.values[weaponRowIndex][0] = `${choppedLoadout.join(',')},${newAmmoTypeIndex}`
     // notify(`pickedItem:${JSON.stringify(weaponsSheet.data.values[0][0])}`,5000)
     updateAmmo()
+    screen.render()
     weaponsSheet.update()
     ammoSheet.update()
   }
@@ -936,6 +939,7 @@ async function equip(params) {
     weaponsSheet.data.values[0][0] = `${pickedWeaponName},${ammoName}`
     weaponsSheet.update()
     updateAmmo()
+    screen.render()
   }
 }
 
@@ -1140,7 +1144,7 @@ async function critical(params){
 
 async function HandleCommand(fullMessage) {
   const command = fullMessage.trim().split(' ')[0];
-  const params = fullMessage.trim().split(' ').slice(1);
+  const params = fullMessage.trim().split(' ').slice(1).filter((a) => a !== '');
   switch (command.toLowerCase()) {
     case 'exit':
       screen.destroy();
