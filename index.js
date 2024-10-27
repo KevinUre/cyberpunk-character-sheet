@@ -810,6 +810,29 @@ async function gear(params) {
           gearSheet.fetch();
         }
         break;
+      case 'chart':
+        listBox.setData([
+          ['Bracket', 'Cost','DV','Time'],
+          ['Cheap', '10','9','1 hour'],
+          ['Everyday', '20','9','1 hour'],
+          ['Costly', '50','13','6 hours'],
+          ['Premium', '100','17','1 day'],
+          ['Expensive', '500','21','1 week'],
+          ['Very Expensive', '1000','24','2 weeks'],
+          ['Luxury', '5000','29','1 month'],
+        ])
+        listBox.height = 3 + gearSheet.data.values.length
+        await new Promise((resolve,reject) =>{
+          listBox.toggle()
+          listBox.focus()
+          screen.render();
+          listBox.once('select', (item, index) => {
+            resolve({ item, index });
+          });
+        })
+        listBox.toggle()
+        screen.render()
+        break;
     }
   }
   else {
@@ -1134,9 +1157,6 @@ async function critical(params){
         screen.render()
         break;
     }
-  }
-  else {
-    
   }
 }
 
