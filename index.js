@@ -696,26 +696,49 @@ async function heal(params) {
 
 async function damage(params) {
   const current = parseInt(healthSheet.data.values[0][0])
-  if (!params || isNaN(params[0])) { return; }
-  let incoming = parseInt(params[0])
+  if (!params) { return; }
+  let incoming = undefined
   let headShot = false
+  let melee = false
   let brain = false
-  if (params[1] && params[1] === 'head') { headShot = true }
-  if (params[1] && params[1] === 'brain') { brain = true }
+  let ap = false
+  params.forEach((p) => {
+    if (!isNaN(p)){ incoming = parseInt(p) }
+    else { 
+      switch(p.toLowerCase()){
+        case 'melee':
+          melee = true
+          break;
+        case 'head':
+          headShot = true
+          break;
+        case 'brain':
+          brain = true
+          break;
+        case 'ap':
+          ap = true
+          break;
+      }
+    }
+  })
+  if(!incoming) { return; }
   let armor = parseInt(armorSheet.data.values[2][6])
   if (headShot) {
     armor = parseInt(armorSheet.data.values[1][6])
   }
+  if (melee) { armor = Math.floor(armor/2) }
   if (brain) { armor = 0 }
-  if (armor <= incoming) {
+  if (armor < incoming) {
     let damage = incoming - armor
     if(headShot) { damage = damage * 2 }
     healthSheet.data.values[0][0] = `${Math.max(0,current-damage)}`
     if (!brain) {
+      let ablasion = 1
+      if (ap) { ablasion = 2 }
       if (headShot) { 
-        armorSheet.data.values[1][6] = Math.max(0,armor-1)
+        armorSheet.data.values[1][6] = Math.max(0,armorSheet.data.values[1][6]-ablasion)
       } else {
-        armorSheet.data.values[2][6] = Math.max(0,armor-1)
+        armorSheet.data.values[2][6] = Math.max(0,armorSheet.data.values[2][6]-ablasion)
       }
     }
     if(!brain) {
@@ -1226,11 +1249,11 @@ await animate(`\nInitializing Virtuality Goggles... `, 0)
 await auth.authorize();
 await animate(`{green-fg}OK{/green-fg}\nConnecting to biometrics... `, 20)
 await healthSheet.fetch();
-await animate(`Done\nInitializing Interface Plugs... `, 0)
+await animate(`Done\nInitializing Interface Plugs... `, 20)
 await armorSheet.fetch();
-await animate(`{green-fg}OK{/green-fg}\nConnecting To Neural Interface... `, 30)
+await animate(`{green-fg}OK{/green-fg}\nConnecting To Neural Interface... `, 20)
 await weaponsSheet.fetch();
-await animate(`Connected\nReading Skills Assessment from Database... `, 30)
+await animate(`Connected\nReading Skills Assessment from Database... `, 20)
 const doc = new GoogleSpreadsheet('1b0-tFXS_uABC7HGnLPXoRtf4Cl7JXz1lCWFRWrAZOEo', { apiKey: process.env.APIKEY })
 await doc.loadInfo();
 const sheet1 = doc.sheetsByIndex[0];
@@ -1241,7 +1264,7 @@ await gearSheet.fetch();
 await moneySheet.fetch();
 await animate(`Done\nReading Cyberdeck Drive 0 into RAM... `, 10)
 await programsSheet.fetch();
-await animate(`Done\n`, 70)
+await animate(`Done\n`, 40)
 
 await (async (animations) => {
   await animate(`Initializing Programs to RAM...\n`, 80)
