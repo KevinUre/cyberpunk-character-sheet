@@ -70,10 +70,10 @@ function sheetFactory (range) {
 let healthSheet = sheetFactory(`'Page 1'!D28:F28`);
 let armorSheet = sheetFactory(`'Page 1'!A34:G36`);
 let weaponsSheet = sheetFactory(`'Page 1'!Q32:AG38`);
-let ammoSheet = sheetFactory(`'Page 2'!T22:AC25`);
-let gearSheet = sheetFactory(`'Page 2'!P3:P21`);
+let ammoSheet = sheetFactory(`'Page 2'!F34:AC37`);
+let gearSheet = sheetFactory(`'Page 2'!P3:S32`);
 let programsSheet = sheetFactory(`'Page 3'!S4:S16`);
-let moneySheet = sheetFactory(`'Page 2'!AB2:AC2`);
+let moneySheet = sheetFactory(`'Page 2'!Z2:AA2`);
 
 function letterToColumn(letter) {
   let column = 0;
@@ -803,7 +803,7 @@ async function gear(params) {
         break;
       case 'rm':
       case 'remove':
-        listBox.setData([["Remove which Item?"],...gearSheet.data.values])
+        listBox.setData([["Inventory", "Notes"],...gearSheet.data.values.map((row)=>row[3]?[row[0],row[3]]:[row[0]])])
         listBox.height = 3 + gearSheet.data.values.length
         const result = await new Promise((resolve,reject) =>{
           listBox.toggle()
@@ -844,7 +844,7 @@ async function gear(params) {
           ['Very Expensive', '1000','24','2 weeks'],
           ['Luxury', '5000','29','1 month'],
         ])
-        listBox.height = 3 + gearSheet.data.values.length
+        listBox.height = 10
         await new Promise((resolve,reject) =>{
           listBox.toggle()
           listBox.focus()
@@ -859,7 +859,7 @@ async function gear(params) {
     }
   }
   else {
-    listBox.setData([["Inventory"],...gearSheet.data.values])
+    listBox.setData([["Inventory", "Notes"],...gearSheet.data.values.map((row)=>row[3]?[row[0],row[3]]:[row[0]])])
     listBox.height = 3 + gearSheet.data.values.length
     await new Promise((resolve,reject) =>{
       listBox.toggle()
@@ -909,7 +909,7 @@ async function reload(params) {
     }
   }
   listBox.setData([["Ammunition"],...acceptableAmmos])
-  listBox.height = 3 + programsSheet.data.values.length
+  listBox.height = 3 + acceptableAmmos.length
   const selection = await new Promise((resolve,reject) =>{
     listBox.toggle()
     listBox.focus()
@@ -956,7 +956,7 @@ async function equip(params) {
     weaponsToList.push([weaponsSheet.data.values[i][1]])
   }
   listBox.setData([["Guns"],...weaponsToList])
-  listBox.height = 3 + programsSheet.data.values.length
+  listBox.height = 3 + weaponsToList.length
   const selection = await new Promise((resolve,reject) =>{
     listBox.toggle()
     listBox.focus()
@@ -1005,7 +1005,7 @@ async function ammo() {
     ammoList[i][1] = ammoList[i][1].toString()
   }
   listBox.setData([["Ammunition","Qty"],...ammoList])
-  listBox.height = 3 + programsSheet.data.values.length
+  listBox.height = 3 + ammoList.length
   await new Promise((resolve,reject) =>{
     listBox.toggle()
     listBox.focus()
