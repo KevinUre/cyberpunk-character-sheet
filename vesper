@@ -1,0 +1,5 @@
+#! /bin/bash
+
+echo -e '\e[8;15;57t'
+
+node vesper.js

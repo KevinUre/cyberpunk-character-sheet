@@ -5,7 +5,6 @@ import { google } from 'googleapis';
 const sheets = google.sheets('v4');
 import * as fs from 'fs';
 import figlet from 'figlet';
-import { spawn, execSync } from 'child_process';
 
 let quickMode = false;
 process.argv.forEach(function (val, index, array) {
@@ -68,13 +67,8 @@ function sheetFactory (range) {
 // #endregion
 
 // #region Sheets
-let healthSheet = sheetFactory(`'Page 1'!D28:F28`);
-let armorSheet = sheetFactory(`'Page 1'!A34:G36`);
-let weaponsSheet = sheetFactory(`'Page 1'!Q32:AG38`);
-let ammoSheet = sheetFactory(`'Page 2'!F34:AC37`);
-let gearSheet = sheetFactory(`'Page 2'!P3:S32`);
-let programsSheet = sheetFactory(`'Page 3'!S4:S16`);
-let moneySheet = sheetFactory(`'Page 2'!AB2:AC2`);
+let healthSheet = sheetFactory(`Vesper!C13:E13`);
+let armorSheet = sheetFactory(`Vesper!C14:D15`);
 // #endregion
 
 // #region util functions
@@ -100,36 +94,23 @@ const animate = async (message, ms) => {
 
 const tablize = (pairs) => {
   const data = []
-  for (let i = 0; i < 17; i++) {
+  for (let i = 0; i < 6; i++) {
     const line = []
     line.push(pairs[i][0])
     line.push(pairs[i][1])
-    line.push(pairs[i + 17][0])
-    line.push(pairs[i + 17][1])
-    line.push(pairs[i + 34][0])
-    line.push(pairs[i + 34][1])
-    if (i + 51 < pairs.length) {
-      line.push(pairs[i + 51][0])
-      line.push(pairs[i + 51][1])
+    if (i+6 < pairs.length) {
+      line.push(pairs[i + 6][0])
+      line.push(pairs[i + 6][1])
     }
     data.push(line)
   }
   return data;
 }
-
-function cleanup() {
-  if (fs.existsSync(`${process.cwd()}/pid`)) {
-    const pid = fs.readFileSync(`${process.cwd()}/pid`).toString().trim()
-    execSync(`kill -9 ${pid}`);
-    execSync(`osascript -e 'tell application "Terminal" to close (every window whose name contains "${"Valkyrie@Vesper"}")'`);
-    fs.rmSync(`${process.cwd()}/pid`)
-  }
-}
 // #endregion
 
 // #region Boxes
 var screen = blessed.screen({
-  title: `Valkyrie@0.0.0.0`,
+  title: `Valkyrie@Vesper`,
   dockBorders: true,
   smartCSR: true,
 });
@@ -230,25 +211,6 @@ var helpBox = blessed.box({
   vi: true,
 })
 
-var cashBox = blessed.box({
-  left: 'center',
-  top: 'center',
-  height: 'shrink',
-  width:'shrink',
-  content: '',
-  border: {
-    type: 'line',
-    top: true,
-    bottom: true,
-    left: true,
-    right: true,
-  },
-  tags: true,
-  align: 'left',
-  interactive: true,
-  vi: true,
-})
-
 var skillTable = blessed.table({
   top: 0,
   right: 0,
@@ -273,7 +235,7 @@ var skillTable = blessed.table({
 
 const topBar = blessed.box({
   height: 1,
-  width: 120,
+  width: 53,
   top: 0,
   right: 0,
   label: 'skillz',
@@ -284,7 +246,7 @@ const topBar = blessed.box({
 })
 
 const rightBar = blessed.box({
-  height: 34,
+  height: 12,
   width: 1,
   top: 0,
   right: 0,
@@ -358,11 +320,11 @@ const healthBar = blessed.progressbar({
   label: 'HP',
   ch: '█',
   width: 5,
-  height: '100%-11',
+  height: '100%-7',
   top: 0,
   left: 0,
   orientation: 'vertical',
-  filled: 11 / 35 * 100,
+  filled: 100,
   style: {
     bar: { fg: 'cyan' },
     border: { fg: 'cyan' }
@@ -385,7 +347,7 @@ const armorBox = blessed.box({
   width: 6,
   height: 4,
   left: 0,
-  bottom: 7,
+  bottom: 3,
   border: {
     type: 'line',
     top: true,
@@ -395,29 +357,6 @@ const armorBox = blessed.box({
   },
   tags: true,
   content: '11 11',
-  align: 'center'
-})
-
-
-const ammoBox = blessed.box({
-  label: 'Gun',
-  width: 7,
-  height: 4,
-  left: 0,
-  bottom: 3,
-  border: {
-    type: 'line',
-    top: true,
-    bottom: true,
-    left: true,
-    right: true,
-  },
-  style: {
-    border: { fg: 'bright-white' },
-    label: { fg: 'bright-white' }
-  },
-  tags: true,
-  content: 'Basic\n 6/8',
   align: 'center'
 })
 
@@ -467,75 +406,20 @@ const criticalInjuriesMaster = [
 ]
 
 var skills = [
-  ['Accounting', 'P21'],
-  ['Acting', 'X23'],
-  ['Air Vehicle Tech', 'AF16'],
-  ['Animal Handling', 'P22'],
-  ['Archery', 'X28'],
-  ['Athletics', 'P9'],
-  ['Autofire', 'X29'],
-  ['Basic Tech', 'AF17'],
-  ['Brawling', 'X18'],
-  ['Bribery', 'AF6'],
-  ['Bureaucracy', 'P23'],
-  ['Business', 'P24'],
-  ['Composition', 'P25'],
-  ['Conceal/Reveal Object', 'P4'],
-  ['Concentration', 'P3'],
-  ['Contortionist', 'P10'],
-  ['Conversation', 'AF7'],
-  ['Criminology', 'P26'],
-  ['Cryptography', 'P27'],
-  ['Cybertech', 'AF18'],
-  ['Dance', 'P11'],
-  ['Deduction', 'P28'],
-  ['Demolitions', 'AF19'],
-  ['Drive Land Vehicle', 'P16'],
-  ['Education', 'P29'],
-  ['Electronics/Security Tech', 'AF20'],
-  ['Endurance', 'P12'],
-  ['Evasion', 'X19'],
-  ['First Aid', 'AF21'],
-  ['Forgery', 'AF22'],
-  ['Gamble', 'P30'],
-  ['Handgun', 'X30'],
-  ['Heavy Weapons', 'AF3'],
-  ['Human Perception', 'AF8'],
-  ['Interrogation', 'AF9'],
-  ['Land Vehicle Tech', 'AF23'],
-  ['Language: English', 'X5'],
-  ['Language: Streetslang', 'X4'],
-  ['Library Search', 'X7'],
-  ['Lip Reading', 'P5'],
-  ['Local Expert: Home', 'X9'],
-  ['Martial Arts', 'X20'],
-  ['Melee Weapon', 'X21'],
-  ['Paint/Draw/Sculpt', 'AF24'],
-  ['Paramedic', 'AF25'],
-  ['Perception', 'P6'],
-  ['Personal Grooming', 'AF11'],
-  ['Persuasion', 'AF10'],
-  ['Photography/Film', 'AF26'],
-  ['Pick Lock', 'AF27'],
-  ['Pick Pocket', 'AF28'],
-  ['Pilot Air Vehicle', 'P17'],
-  ['Pilot Sea Vehicle', 'P18'],
-  ['Resist Torture/Drugs', 'P13'],
-  ['Riding', 'P19'],
-  ['Sea Vehicle Tech', 'AF29'],
-  ['Shoulder Arms', 'AF4'],
-  ['Stealth', 'P14'],
-  ['Streetwise', 'AF12'],
-  ['Tactics', 'X15'],
-  ['Tracking', 'P7'],
-  ['Trading', 'AF13'],
-  ['Wardrobe & Style', 'AF14'],
-  ['Weaponstech', 'AF30'],
-  ['Wilderness Survival', 'X16'],
+  ['Athletics', 'F2'],
+  ['Brawling', 'F3'],
+  ['Combat', 'F4'],
+  ['Endurance', 'F5'],
+  ['Evasion', 'F6'],
+  ['Human Perception', 'F7'],
+  ['Perception', 'F8'],
+  ['Stealth', 'F9'],
+  ['Tactics', 'F10'],
+  ['Tracking', 'F11'],
+  ['Wilderness Survival', 'F12'],
 ]
 
-const inputPrompt = '$Valkyrie@0.0.0.0>'
-let vesperUp = false;
+const inputPrompt = '$Valkyrie@Vesper>'
 // #endregion
 
 inputBox.on('submit', async (prompt) => {
@@ -591,8 +475,8 @@ function notify(message, ms) {
 }
 
 function updateArmor() {
-  const head = parseInt(armorSheet.data.values[1][6])
-  const body = parseInt(armorSheet.data.values[2][6])
+  const head = parseInt(armorSheet.data.values[1][0])
+  const body = parseInt(armorSheet.data.values[0][0])
 
   let headString = head.toString().trim().padStart(2,' ') // alt+255
   if (head < 1) { headString = `{red-fg}${headString}{/red-fg}`}
@@ -630,33 +514,6 @@ function updateHealth() {
   }
 }
 
-function updateAmmo() {
-  const loadout = weaponsSheet.data.values[0][0]
-  const weaponName = loadout.split(',')[0]
-  const weaponRow = weaponsSheet.data.values.filter((row) => row[1] === weaponName)[0]
-  const weaponLabel = weaponRow[0].split(',')[0]
-  const currentAmmo = parseInt(weaponRow[6])
-  const maxAmmo = weaponRow[0].split(',')[2]
-  const ammoTypeName = loadout.split(',')[1]
-  const ammoTypeIndex = ammoSheet.data.values[0].findIndex((e)=> e === ammoTypeName)
-  const ammoType = ammoSheet.data.values[3][ammoTypeIndex]
-  if(currentAmmo == 0) {
-    ammoBox.style.border.fg = 'red'
-  } else {
-    ammoBox.style.border.fg = 'bright-white'
-  }
-  let ammo = `${theme.accentTag.open}${currentAmmo.toString()}${theme.accentTag.close}`;
-  if(currentAmmo == 0) {
-    ammo = `{red-fg}${ammo}{/red-fg}`
-  } else if (currentAmmo < maxAmmo / 2) {
-    ammo = `{yellow-fg}${ammo}{/yellow-fg}`
-  }
-  ammoBox.setLabel(weaponLabel.padStart(4,'─'))
-  const typeString = `${theme.detailColorTag.open}${ammoType}${theme.detailColorTag.close}`
-  const maxAmmoString = `${theme.detailColorTag.open}/${maxAmmo}${theme.detailColorTag.close}`
-  ammoBox.setContent(`${typeString}\n${ammo}${maxAmmoString}`)
-}
-
 async function refresh(params, silent) {
   if (!silent) {
     notificationBox.setContent('Please Wait...');
@@ -667,16 +524,10 @@ async function refresh(params, silent) {
   const full = params && params.length > 0 ? true : false;
   await armorSheet.fetch();
   updateArmor();
-  await weaponsSheet.fetch();
-  await ammoSheet.fetch();
-  updateAmmo();
-  await gearSheet.fetch();
-  await moneySheet.fetch();
   await healthSheet.fetch();
   updateHealth();
-  await programsSheet.fetch();
   if(full) {
-    await sheet1.loadCells('A1:AG39');
+    await sheet1.loadCells('E2:F12');
     const pairs = skills.map((skill) => {
       return [skill[0], `${sheet1.getCellByA1(skill[1]).value}`]
     })
@@ -737,9 +588,9 @@ async function damage(params) {
     }
   })
   if(!incoming) { return; }
-  let armor = parseInt(armorSheet.data.values[2][6])
+  let armor = parseInt(armorSheet.data.values[0][0])
   if (headShot) {
-    armor = parseInt(armorSheet.data.values[1][6])
+    armor = parseInt(armorSheet.data.values[1][0])
   }
   if (melee) { armor = Math.floor(armor/2) }
   if (brain) { armor = 0 }
@@ -751,9 +602,9 @@ async function damage(params) {
       let ablasion = 1
       if (ap) { ablasion = 2 }
       if (headShot) { 
-        armorSheet.data.values[1][6] = Math.max(0,armorSheet.data.values[1][6]-ablasion)
+        armorSheet.data.values[1][0] = Math.max(0,armorSheet.data.values[1][0]-ablasion)
       } else {
-        armorSheet.data.values[2][6] = Math.max(0,armorSheet.data.values[2][6]-ablasion)
+        armorSheet.data.values[0][0] = Math.max(0,armorSheet.data.values[0][0]-ablasion)
       }
     }
     if(!brain) {
@@ -766,271 +617,18 @@ async function damage(params) {
   }
 }
 
-async function fire(params) {
-  const loadout = weaponsSheet.data.values[0][0]
-  const weaponName = loadout.split(',')[0]
-  const weaponRowIndex = weaponsSheet.data.values.findIndex((row) => row[1] === weaponName)
-  const weaponRow = weaponsSheet.data.values[weaponRowIndex]
-  const currentAmmo = parseInt(weaponRow[6])
-  const rateOfFire =  parseInt(weaponRow[7])
-  let amount = rateOfFire
-  if(params && !isNaN(params[0])) { amount = Math.min(rateOfFire, parseInt(params[0])) }
-  if(params && params[0] == 'auto') { amount = 10 }
-  if (amount > currentAmmo) { 
-    if(!params[0]) {
-      amount = currentAmmo
-    }
-    else {
-      notify('Insufficient Ammunition',2500)
-      return
-    }
-  }
-  weaponsSheet.data.values[weaponRowIndex][6] = currentAmmo - amount
-  updateAmmo()
-  screen.render()
-  weaponsSheet.update()
-}
-
 async function repair(params) {
   if ( params && params[0] === 'all') {
-    armorSheet.data.values[1][6] = armorSheet.data.values[1][0]
-    armorSheet.data.values[2][6] = armorSheet.data.values[2][0]
+    armorSheet.data.values[0][0] = armorSheet.data.values[0][1]
+    armorSheet.data.values[1][0] = armorSheet.data.values[1][1]
   } else if (params && params[1] === 'head') {
-    armorSheet.data.values[1][6] = armorSheet.data.values[1][0]
+    armorSheet.data.values[1][0] = armorSheet.data.values[1][1]
   } else {
-    armorSheet.data.values[2][6] = armorSheet.data.values[2][0]
+    armorSheet.data.values[0][0] = armorSheet.data.values[0][1]
   }
+  fs.writeFileSync('debug',JSON.stringify(armorSheet.data))
   armorSheet.update()
   updateArmor()
-  screen.render()
-}
-
-async function gear(params) {
-  if (params && params[0]) {
-    switch (params[0]) {
-      case 'add':
-          if(params[1]) {
-            const newItem = params.slice(1).join(' ');
-            gearSheet.data.values.push([`${newItem}`]);
-            await gearSheet.update();
-            notify(`${newItem} successfully added`,2500);
-          }
-        break;
-      case 'rm':
-      case 'remove':
-        listBox.setData([["Inventory", "Notes"],...gearSheet.data.values.map((row)=>row[3]?[row[0],row[3]]:[row[0]])])
-        listBox.height = 3 + gearSheet.data.values.length
-        const result = await new Promise((resolve,reject) =>{
-          listBox.toggle()
-          listBox.focus()
-          screen.render();
-          const selectHandler = (item, index) => { 
-            listBox.removeListener('select', selectHandler)
-            listBox.removeListener('q', exitHandler)
-            resolve({ item, index }) 
-          }
-          const exitHandler = () => { 
-            listBox.removeListener('select', selectHandler)
-            listBox.removeListener('q', exitHandler)
-            resolve(null) 
-          }
-          listBox.once('select', selectHandler);
-          listBox.key('q', exitHandler);
-        })
-        listBox.toggle()
-        screen.render()
-        if(result) {
-          const itemName = gearSheet.data.values[result.index-1].toString()
-          gearSheet.data.values.splice([result.index-1],1);
-          gearSheet.data.values.push(['']);
-          notify(`removed ${itemName}`,2500)
-          await gearSheet.update();
-          gearSheet.fetch();
-        }
-        break;
-      case 'chart':
-        listBox.setData([
-          ['Bracket', 'Cost','DV','Time'],
-          ['Cheap', '10','9','1 hour'],
-          ['Everyday', '20','9','1 hour'],
-          ['Costly', '50','13','6 hours'],
-          ['Premium', '100','17','1 day'],
-          ['Expensive', '500','21','1 week'],
-          ['Very Expensive', '1000','24','2 weeks'],
-          ['Luxury', '5000','29','1 month'],
-        ])
-        listBox.height = 10
-        await new Promise((resolve,reject) =>{
-          listBox.toggle()
-          listBox.focus()
-          screen.render();
-          listBox.once('select', (item, index) => {
-            resolve({ item, index });
-          });
-        })
-        listBox.toggle()
-        screen.render()
-        break;
-    }
-  }
-  else {
-    listBox.setData([["Inventory", "Notes"],...gearSheet.data.values.map((row)=>row[3]?[row[0],row[3]]:[row[0]])])
-    listBox.height = 3 + gearSheet.data.values.length
-    await new Promise((resolve,reject) =>{
-      listBox.toggle()
-      listBox.focus()
-      screen.render();
-      listBox.once('select', (item, index) => {
-        // Resolve the promise with the selected item and index
-        resolve({ item, index });
-      });
-    })
-    listBox.toggle()
-    screen.render()
-  }
-}
-
-async function programs(params) {
-  listBox.setData([["Programs"],...programsSheet.data.values])
-  listBox.height = 3 + programsSheet.data.values.length
-  await new Promise((resolve,reject) =>{
-    listBox.toggle()
-    listBox.focus()
-    screen.render();
-    listBox.once('select', (item, index) => {
-      // Resolve the promise with the selected item and index
-      resolve({ item, index });
-    });
-  })
-  listBox.toggle()
-  screen.render()
-}
-
-async function reload(params) {
-  const loadout = weaponsSheet.data.values[0][0]
-  const weaponName = loadout.split(',')[0]
-  const weaponRowIndex = weaponsSheet.data.values.findIndex((row) => row[1] === weaponName)
-  const weaponRow = weaponsSheet.data.values[weaponRowIndex]
-  const currentAmmo = parseInt(weaponRow[6])
-  const maxAmmo = parseInt(weaponRow[0].split(',')[2])
-  const gunAmmoTypeCode = weaponRow[0].split(',')[1]
-  const ammoTypeName = loadout.split(',')[1]
-  const ammoTypeIndex = ammoSheet.data.values[0].findIndex((e) => e === ammoTypeName)
-  // pick a type
-  const acceptableAmmos = []
-  for(let i = 0; i < ammoSheet.data.values[0].length; i = i + 2) {
-    if (ammoSheet.data.values[3][i+1] === gunAmmoTypeCode) {
-      acceptableAmmos.push([ammoSheet.data.values[0][i]])
-    }
-  }
-  listBox.setData([["Ammunition"],...acceptableAmmos])
-  listBox.height = 3 + acceptableAmmos.length
-  const selection = await new Promise((resolve,reject) =>{
-    listBox.toggle()
-    listBox.focus()
-    screen.render();
-    const selectHandler = (item, index) => { 
-      listBox.removeListener('select', selectHandler)
-      listBox.removeListener('q', exitHandler)
-      resolve({ item, index }) 
-    }
-    const exitHandler = () => { 
-      listBox.removeListener('select', selectHandler)
-      listBox.removeListener('q', exitHandler)
-      resolve(null) 
-    }
-    listBox.once('select', selectHandler);
-    listBox.key('q', exitHandler);
-  })
-  listBox.toggle()
-  screen.render()
-  if(selection) {
-    // unload
-    ammoSheet.data.values[2][ammoTypeIndex] = parseInt(ammoSheet.data.values[2][ammoTypeIndex])+currentAmmo
-    // load
-    const pickedAmmoName = selection.item.getText().trim(' ')
-    const newAmmoTypeIndex = ammoSheet.data.values[0].findIndex((e) => e === pickedAmmoName)
-    const amountToLoad = Math.min(parseInt(ammoSheet.data.values[2][newAmmoTypeIndex]),maxAmmo)
-    ammoSheet.data.values[2][newAmmoTypeIndex] = parseInt(ammoSheet.data.values[2][newAmmoTypeIndex]) - amountToLoad
-    weaponsSheet.data.values[weaponRowIndex][6] = amountToLoad
-    weaponsSheet.data.values[0][0] = `${weaponName},${pickedAmmoName}`
-    const choppedLoadout = weaponsSheet.data.values[weaponRowIndex][0].split(',')
-    choppedLoadout.pop()
-    weaponsSheet.data.values[weaponRowIndex][0] = `${choppedLoadout.join(',')},${newAmmoTypeIndex}`
-    // notify(`pickedItem:${JSON.stringify(weaponsSheet.data.values[0][0])}`,5000)
-    updateAmmo()
-    screen.render()
-    weaponsSheet.update()
-    ammoSheet.update()
-  }
-}
-
-async function equip(params) {
-  const weaponsToList = []
-  for(let i = 1; i < weaponsSheet.data.values.length; i++) {
-    weaponsToList.push([weaponsSheet.data.values[i][1]])
-  }
-  listBox.setData([["Guns"],...weaponsToList])
-  listBox.height = 3 + weaponsToList.length
-  const selection = await new Promise((resolve,reject) =>{
-    listBox.toggle()
-    listBox.focus()
-    screen.render();
-    const selectHandler = (item, index) => { 
-      listBox.removeListener('select', selectHandler)
-      listBox.removeListener('q', exitHandler)
-      resolve({ item, index }) 
-    }
-    const exitHandler = () => { 
-      listBox.removeListener('select', selectHandler)
-      listBox.removeListener('q', exitHandler)
-      resolve(null) 
-    }
-    listBox.once('select', selectHandler);
-    listBox.key('q', exitHandler);
-  })
-  listBox.toggle()
-  screen.render()
-  if (selection) {
-    const pickedWeaponName = selection.item.getText().trim(' ')
-    const weaponRowIndex = weaponsSheet.data.values.findIndex((row) => row[1] === pickedWeaponName)
-    const weaponRow = weaponsSheet.data.values[weaponRowIndex]
-    const currentAmmoIndex = parseInt(weaponRow[0].split(',')[3])
-    const ammoName = ammoSheet.data.values[0][currentAmmoIndex]
-    weaponsSheet.data.values[0][0] = `${pickedWeaponName},${ammoName}`
-    weaponsSheet.update()
-    updateAmmo()
-    screen.render()
-  }
-}
-
-async function ammo() {
-  const ammoList = []
-  for(let i = 0; i < ammoSheet.data.values[0].length; i = i + 2) {
-    ammoList.push([ammoSheet.data.values[0][i],parseInt(ammoSheet.data.values[2][i],)])
-  }
-  for(let i = 1; i < weaponsSheet.data.values.length; i++) {
-    const weaponInfos = weaponsSheet.data.values[i][0]
-    const weaponAmmoIndex = weaponInfos.split(',')[3]
-    const ammoName = ammoSheet.data.values[0][weaponAmmoIndex]
-    const index = ammoList.findIndex((row) => row[0] === ammoName)
-    ammoList[index][1] += parseInt(weaponsSheet.data.values[i][6])
-  }
-  for(let i = 0; i < ammoList.length; i++) {
-    ammoList[i][1] = ammoList[i][1].toString()
-  }
-  listBox.setData([["Ammunition","Qty"],...ammoList])
-  listBox.height = 3 + ammoList.length
-  await new Promise((resolve,reject) =>{
-    listBox.toggle()
-    listBox.focus()
-    screen.render();
-    listBox.once('select', (item, index) => {
-      // Resolve the promise with the selected item and index
-      resolve({ item, index });
-    });
-  })
-  listBox.toggle()
   screen.render()
 }
 
@@ -1063,28 +661,6 @@ async function help() {
       screen.once('keypress', () => {
         // Resolve the promise with the selected item and index
         helpBox.toggle()
-        screen.render()
-        resolve();
-    }, 500);
-    });
-  })
-}
-
-async function cash(params) {
-  if(params && params[0] && !isNaN(params[0])) {
-    const amount = parseInt(params[0])
-    moneySheet.data.values[0][0] = (parseInt(moneySheet.data.values[0][0])+amount).toString()
-    moneySheet.update()
-  }
-  cashBox.setContent(figlet.textSync(moneySheet.data.values[0][0],{ font: 'Ghost' }).split('\n').slice(2).join('\n'))
-  await new Promise((resolve,reject) =>{
-    cashBox.toggle()
-    cashBox.focus()
-    cashBox.render();
-    setTimeout(() => {
-      screen.once('keypress', () => {
-        // Resolve the promise with the selected item and index
-        cashBox.toggle()
         screen.render()
         resolve();
     }, 500);
@@ -1197,25 +773,6 @@ async function critical(params){
     }
   }
 }
-
-async function vesper(params) {
-  if(!vesperUp){
-    const pet = spawn(
-      'osascript',
-      ['-e', `tell application "Terminal" to do script "cd ${process.cwd()}; echo $$ > pid; . ./vesper"`],
-      {
-        stdio: 'ignore'
-      }
-    );
-    process.on('exit', cleanup);
-    process.on('SIGINT', () => {
-      cleanup();
-      process.exit();
-    });
-    process.on('SIGTERM', cleanup);
-    vesperUp = true;
-  }
-}
 // #endregion
 
 async function HandleCommand(fullMessage) {
@@ -1239,41 +796,11 @@ async function HandleCommand(fullMessage) {
     case 'repair':
       repair(params);
       break;
-    case 'gear':
-      await gear(params);
-      break;
-    case 'programs':
-    case 'prog':
-    case 'progs':
-    case 'grams':
-      await programs(params);
-      break;
-    case 'fire':
-    case 'shoot':
-      fire(params);
-      break;
-    case 'equip':
-      await equip(params);
-      break;
-    case 'reload':
-      await reload(params);
-      break;
-    case 'ammo':
-      await ammo(params);
-      break;
     case 'help':
       await help(params);
       break;
-    case 'cash':
-    case 'money':
-    case 'eb':
-      await cash(params);
-      break;
     case 'crit':
       await critical(params);
-      break;
-    case 'vesper':
-      await vesper(params);
       break;
   }
 }
@@ -1289,47 +816,22 @@ await healthSheet.fetch();
 await animate(`Done\nInitializing Interface Plugs... `, 20)
 await armorSheet.fetch();
 await animate(`{green-fg}OK{/green-fg}\nConnecting To Neural Interface... `, 20)
-await weaponsSheet.fetch();
+// await weaponsSheet.fetch();
 await animate(`Connected\nReading Skills Assessment from Database... `, 20)
 const doc = new GoogleSpreadsheet('1b0-tFXS_uABC7HGnLPXoRtf4Cl7JXz1lCWFRWrAZOEo', { apiKey: process.env.APIKEY })
 await doc.loadInfo();
-const sheet1 = doc.sheetsByIndex[0];
-await sheet1.loadCells('A1:AG39');
+const sheet1 = doc.sheetsByTitle['Vesper'];
+await sheet1.loadCells('A1:F12');
 await animate(`Done\nObtaining Inventory Data... `, 10)
-await ammoSheet.fetch();
-await gearSheet.fetch();
-await moneySheet.fetch();
+// await ammoSheet.fetch();
+// await gearSheet.fetch();
+// await moneySheet.fetch();
 await animate(`Done\nReading Cyberdeck Drive 0 into RAM... `, 10)
-await programsSheet.fetch();
+// await programsSheet.fetch();
 await animate(`Done\n`, 40)
 
 await (async (animations) => {
   await animate(`Initializing Programs to RAM...\n`, 80)
-  await animate(`Slot 1... `, 20)
-  await animate(`${programsSheet.data.values[0] ? programsSheet.data.values[0][0] : ''}\n`, 70)
-  await animate(`Slot 2... `, 20)
-  await animate(`${programsSheet.data.values[1] ? programsSheet.data.values[1][0] : ''}\n`, 65)
-  await animate(`Slot 3... `, 20)
-  await animate(`${programsSheet.data.values[2] ? programsSheet.data.values[2][0] : ''}\n`, 60)
-  await animate(`Slot 4... `, 20)
-  await animate(`${programsSheet.data.values[3] ? programsSheet.data.values[3][0] : ''}\n`, 55)
-  await animate(`Slot 5... `, 20)
-  await animate(`${programsSheet.data.values[4] ? programsSheet.data.values[4][0] : ''}\n`, 50)
-  await animate(`Slot 6... `, 20)
-  await animate(`${programsSheet.data.values[5] ? programsSheet.data.values[5][0] : ''}\n`, 45)
-  await animate(`Slot 7... `, 20)
-  await animate(`${programsSheet.data.values[6] ? programsSheet.data.values[6][0] : ''}\n`, 40)
-  await animate(`Slot 8... `, 20)
-  await animate(`${programsSheet.data.values[7] ? programsSheet.data.values[7][0] : '{yellow-fg}Buffer Overflow{/yellow-fg}'}\n`, 35)
-  await animate(`Slot 9... `, 20)
-  await animate(`${programsSheet.data.values[8] ? programsSheet.data.values[8][0] : '{yellow-fg}Buffer Overflow{/yellow-fg}'}\n`, 30)
-  await animate(`Slot 10... `, 20)
-  await animate(`${programsSheet.data.values[9] ? programsSheet.data.values[9][0] : '{yellow-fg}Buffer Overflow{/yellow-fg}'}\n`, 30)
-  await animate(`Slot 11... `, 20)
-  await animate(`${programsSheet.data.values[10] ? programsSheet.data.values[10][0] : '{yellow-fg}Buffer Overflow{/yellow-fg}'}\n`, 30)
-  await animate(`Slot 12... `, 20)
-  await animate(`${programsSheet.data.values[11] ? programsSheet.data.values[11][0] : '{yellow-fg}Buffer Overflow{/yellow-fg}'}\n`, 30)
-  await animate(`\nLoading Deck GUI`, 10)
   await delay(20);
   screen.append(fakeLoadingBar);
   screen.render();
@@ -1386,6 +888,7 @@ await (async (animations) => {
 
 await delay(100);
 loadingBox.toggle();
+// console.log(sheet1.getCellByA1(`F7`).value)
 const pairs = skills.map((skill) => {
   return [skill[0], `${sheet1.getCellByA1(skill[1]).value}`]
 })
@@ -1402,8 +905,6 @@ screen.append(listBox);
 listBox.toggle();
 screen.append(helpBox);
 helpBox.toggle();
-screen.append(cashBox);
-cashBox.toggle();
 
 await delay(200);
 screen.append(healthBar);
@@ -1411,12 +912,8 @@ updateHealth();
 screen.render();
 
 await delay(200);
-updateAmmo();
-screen.append(ammoBox);
-screen.render();
-
-await delay(200);
 updateArmor();
+fs.writeFileSync('debug', JSON.stringify(armorSheet.data))
 screen.append(armorBox);
 screen.append(criticalInjuriesBox);
 criticalInjuriesBox.toggle();
