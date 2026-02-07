@@ -29,6 +29,7 @@ const theme = {
   }
 }
 
+// #region Sheets App stuff
 // Load the service account key file
 const serviceAccountKeyFile = `./cp-red-valkyrie-b811a5215322.json`;
 const key = JSON.parse(fs.readFileSync(serviceAccountKeyFile));
@@ -66,7 +67,9 @@ function sheetFactory (range) {
     },
   }
 }
+// #endregion
 
+// #region Sheets
 let healthSheet = sheetFactory(`'Page 1'!D28:F28`);
 let armorSheet = sheetFactory(`'Page 1'!A34:G36`);
 let weaponsSheet = sheetFactory(`'Page 1'!Q32:AG38`);
@@ -74,7 +77,9 @@ let ammoSheet = sheetFactory(`'Page 2'!F34:AC37`);
 let gearSheet = sheetFactory(`'Page 2'!P3:S32`);
 let programsSheet = sheetFactory(`'Page 3'!S4:S16`);
 let moneySheet = sheetFactory(`'Page 2'!AB2:AC2`);
+// #endregion
 
+// #region util functions
 function letterToColumn(letter) {
   let column = 0;
   const { length } = letter;
@@ -89,6 +94,33 @@ function delay(ms, always) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+const animate = async (message, ms) => {
+  await delay(ms);
+  loadingBox.setContent(loadingBox.content + message);
+  screen.render();
+}
+
+const tablize = (pairs) => {
+  const data = []
+  for (let i = 0; i < 17; i++) {
+    const line = []
+    line.push(pairs[i][0])
+    line.push(pairs[i][1])
+    line.push(pairs[i + 17][0])
+    line.push(pairs[i + 17][1])
+    line.push(pairs[i + 34][0])
+    line.push(pairs[i + 34][1])
+    if (i + 51 < pairs.length) {
+      line.push(pairs[i + 51][0])
+      line.push(pairs[i + 51][1])
+    }
+    data.push(line)
+  }
+  return data;
+}
+// #endregion
+
+// #region Boxes
 var screen = blessed.screen({
   title: `Valkyrie@0.0.0.0`,
   dockBorders: true,
@@ -210,12 +242,6 @@ var cashBox = blessed.box({
   vi: true,
 })
 
-const animate = async (message, ms) => {
-  await delay(ms);
-  loadingBox.setContent(loadingBox.content + message);
-  screen.render();
-}
-
 var skillTable = blessed.table({
   top: 0,
   right: 0,
@@ -314,6 +340,100 @@ const criticalInjuriesBox = blessed.listtable({
   }
 })
 
+const healthBar = blessed.progressbar({
+  border: {
+    type: 'line',
+    top: true,
+    bottom: true,
+    left: true,
+    right: true,
+  },
+  label: 'HP',
+  ch: '█',
+  width: 5,
+  height: '100%-11',
+  top: 0,
+  left: 0,
+  orientation: 'vertical',
+  filled: 11 / 35 * 100,
+  style: {
+    bar: { fg: 'cyan' },
+    border: { fg: 'cyan' }
+  }
+})
+
+const healthAmount = blessed.box({
+  width: 2,
+  height: 1,
+  top: 1,
+  left: 2,
+  content: 'XX',
+  // style: {
+  //   fg: 'cyan'
+  // }
+})
+
+const armorBox = blessed.box({
+  label: 'Arm',
+  width: 6,
+  height: 4,
+  left: 0,
+  bottom: 7,
+  border: {
+    type: 'line',
+    top: true,
+    bottom: true,
+    left: true,
+    right: true,
+  },
+  tags: true,
+  content: '11 11',
+  align: 'center'
+})
+
+
+const ammoBox = blessed.box({
+  label: 'Gun',
+  width: 7,
+  height: 4,
+  left: 0,
+  bottom: 3,
+  border: {
+    type: 'line',
+    top: true,
+    bottom: true,
+    left: true,
+    right: true,
+  },
+  style: {
+    border: { fg: 'bright-white' },
+    label: { fg: 'bright-white' }
+  },
+  tags: true,
+  content: 'Basic\n 6/8',
+  align: 'center'
+})
+
+var inputBox = blessed.textbox({
+  label: 'Terminal>',
+  width: '100%',
+  height: 3,
+  left: 0,
+  // top: '100%-3',
+  bottom: 0,
+  border: {
+    type: 'line',
+    top: true,
+    bottom: true,
+    left: true,
+    right: true,
+  },
+  inputOnFocus: true,
+  // content: inputPrompt,
+})
+// #endregion
+
+// #region Constants
 const criticalInjuriesMaster = [
   ['2','Dismembered Arm','Arm is gone, drop anything held. +1 to Death Save','---', 'S17'],
   ['3','Dismembered Hand','Hand is gone, drop anything help. +1 to Death Save','---', 'S17'],
@@ -407,122 +527,8 @@ var skills = [
   ['Wilderness Survival', 'X16'],
 ]
 
-const tablize = (pairs) => {
-  const data = []
-  for (let i = 0; i < 17; i++) {
-    const line = []
-    line.push(pairs[i][0])
-    line.push(pairs[i][1])
-    line.push(pairs[i + 17][0])
-    line.push(pairs[i + 17][1])
-    line.push(pairs[i + 34][0])
-    line.push(pairs[i + 34][1])
-    if (i + 51 < pairs.length) {
-      line.push(pairs[i + 51][0])
-      line.push(pairs[i + 51][1])
-    }
-    data.push(line)
-  }
-  return data;
-}
-
-const healthBar = blessed.progressbar({
-  border: {
-    type: 'line',
-    top: true,
-    bottom: true,
-    left: true,
-    right: true,
-  },
-  label: 'HP',
-  ch: '█',
-  width: 5,
-  height: '100%-11',
-  top: 0,
-  left: 0,
-  orientation: 'vertical',
-  filled: 11 / 35 * 100,
-  style: {
-    bar: { fg: 'cyan' },
-    border: { fg: 'cyan' }
-  }
-})
-
-const healthAmount = blessed.box({
-  width: 2,
-  height: 1,
-  top: 1,
-  left: 2,
-  content: 'XX',
-  // style: {
-  //   fg: 'cyan'
-  // }
-})
-
-const armorBox = blessed.box({
-  label: 'Arm',
-  width: 6,
-  height: 4,
-  left: 0,
-  bottom: 7,
-  border: {
-    type: 'line',
-    top: true,
-    bottom: true,
-    left: true,
-    right: true,
-  },
-  tags: true,
-  content: '11 11',
-  align: 'center'
-})
-
-
-const ammoBox = blessed.box({
-  label: 'Gun',
-  width: 7,
-  height: 4,
-  left: 0,
-  bottom: 3,
-  border: {
-    type: 'line',
-    top: true,
-    bottom: true,
-    left: true,
-    right: true,
-  },
-  style: {
-    border: { fg: 'bright-white' },
-    label: { fg: 'bright-white' }
-  },
-  tags: true,
-  content: 'Basic\n 6/8',
-  align: 'center'
-})
-
 const inputPrompt = '$Valkyrie@0.0.0.0>'
-
-var inputBox = blessed.textbox({
-  label: 'Terminal>',
-  width: '100%',
-  height: 3,
-  left: 0,
-  // top: '100%-3',
-  bottom: 0,
-  border: {
-    type: 'line',
-    top: true,
-    bottom: true,
-    left: true,
-    right: true,
-  },
-  inputOnFocus: true,
-  // content: inputPrompt,
-})
-
-// screen.key(['escape', 'q', 'C-c'], function (ch, key) {
-//   return process.exit(0);
-// });
+// #endregion
 
 inputBox.on('submit', async (prompt) => {
   await HandleCommand(prompt);
@@ -564,6 +570,7 @@ inputBox.on('keypress', (ch, key) => {
   })
 })
 
+// #region Handlers
 function notify(message, ms) {
   notificationBox.setContent(message);
   // notificationBox.width = notificationBox.content.length+2;
@@ -1182,8 +1189,7 @@ async function critical(params){
     }
   }
 }
-
-// input.focus();
+// #endregion
 
 async function HandleCommand(fullMessage) {
   const command = fullMessage.trim().split(' ')[0];
@@ -1242,6 +1248,7 @@ async function HandleCommand(fullMessage) {
   }
 }
 
+// #region Initial Animation
 screen.append(loadingBox);
 screen.render();
 
@@ -1389,3 +1396,4 @@ await delay(200);
 screen.append(inputBox)
 inputBox.focus();
 screen.render();
+// #endregion
