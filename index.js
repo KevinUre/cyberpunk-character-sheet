@@ -73,7 +73,7 @@ let weaponsSheet = sheetFactory(`'Page 1'!Q32:AG38`);
 let ammoSheet = sheetFactory(`'Page 2'!F34:AC37`);
 let gearSheet = sheetFactory(`'Page 2'!P3:S32`);
 let programsSheet = sheetFactory(`'Page 3'!S4:S16`);
-let moneySheet = sheetFactory(`'Page 2'!Z2:AA2`);
+let moneySheet = sheetFactory(`'Page 2'!AB2:AC2`);
 
 function letterToColumn(letter) {
   let column = 0;
