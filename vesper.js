@@ -676,9 +676,14 @@ async function critical(params){
     let currentInjuries = []
     switch (params[0]) {
       case 'add':
-        const availableInjuries = criticalInjuriesMaster.filter((row) => !currentInjuryNames.includes(row[1]))
-        criticalInjuriesBox.setData([['#','Name','Effect','Fix','Treat'],...availableInjuries])
+        let injuriesByPart = criticalInjuriesMaster.slice(0,11);
+        if (params[1] && params[1] === 'head') {
+          injuriesByPart = criticalInjuriesMaster.slice(11,22);
+        }
+        const availableInjuries = injuriesByPart.filter((row) => !currentInjuryNames.includes(row[1])).map((row) => [row[0],row[1]])
+        criticalInjuriesBox.setData([['#','Name'],...availableInjuries])
         criticalInjuriesBox.height = 3 + availableInjuries.length
+        criticalInjuriesBox.top = -1;
         result = await new Promise((resolve,reject) =>{
           criticalInjuriesBox.toggle()
           criticalInjuriesBox.focus()
@@ -704,12 +709,13 @@ async function critical(params){
           healthSheet.data.values[0][2] = currentInjuryNames.join('\n')
           notify(`added ${newInjury[1]}`,2500)
           healthSheet.update()
+          criticalInjuriesBox.top = 'center'
         }
         break;
       case 'rm':
       case 'remove':
-        currentInjuries = criticalInjuriesMaster.filter((row) => currentInjuryNames.includes(row[1]))
-        criticalInjuriesBox.setData([['#','Name','Effect','Fix','Treat'],...currentInjuries])
+        currentInjuries = criticalInjuriesMaster.filter((row) => currentInjuryNames.includes(row[1])).map((row) => [row[0],row[1]])
+        criticalInjuriesBox.setData([['#','Name'],...currentInjuries])
         criticalInjuriesBox.height = 3 + currentInjuries.length
         result = await new Promise((resolve,reject) =>{
           criticalInjuriesBox.toggle()
@@ -740,24 +746,9 @@ async function critical(params){
         break;
       case 'list':
       case 'show':
-        currentInjuries = criticalInjuriesMaster.filter((row) => currentInjuryNames.includes(row[1]))
-        criticalInjuriesBox.setData([['#','Name','Effect','Fix','Treat'],...currentInjuries])
+        currentInjuries = criticalInjuriesMaster.filter((row) => currentInjuryNames.includes(row[1])).map((row) => [row[0],row[1]])
+        criticalInjuriesBox.setData([['#','Name'],...currentInjuries])
         criticalInjuriesBox.height = 3 + currentInjuries.length
-        await new Promise((resolve,reject) =>{
-          criticalInjuriesBox.toggle()
-          criticalInjuriesBox.focus()
-          screen.render();
-          criticalInjuriesBox.once('select', (item, index) => {
-            // Resolve the promise with the selected item and index
-            resolve({ item, index });
-          });
-        })
-        criticalInjuriesBox.toggle()
-        screen.render()
-        break;
-      case 'all':
-        criticalInjuriesBox.setData([['#','Name','Effect','Fix','Treat'],...criticalInjuriesMaster])
-        criticalInjuriesBox.height = 3 + criticalInjuriesMaster.length
         await new Promise((resolve,reject) =>{
           criticalInjuriesBox.toggle()
           criticalInjuriesBox.focus()
