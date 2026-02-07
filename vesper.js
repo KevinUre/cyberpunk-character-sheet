@@ -235,7 +235,7 @@ var skillTable = blessed.table({
 
 const topBar = blessed.box({
   height: 1,
-  width: 53,
+  width: 52,
   top: 0,
   right: 0,
   label: 'skillz',
@@ -800,29 +800,21 @@ async function HandleCommand(fullMessage) {
 screen.append(loadingBox);
 screen.render();
 
-await animate(`\nInitializing Virtuality Goggles... `, 0)
+await animate(`\nInitializing Cyberpet Interface... `, 0)
 await auth.authorize();
 await animate(`{green-fg}OK{/green-fg}\nConnecting to biometrics... `, 20)
 await healthSheet.fetch();
-await animate(`Done\nInitializing Interface Plugs... `, 20)
+await animate(`Done\nReading Subdermal Diagnostics... `, 20)
 await armorSheet.fetch();
-await animate(`{green-fg}OK{/green-fg}\nConnecting To Neural Interface... `, 20)
-// await weaponsSheet.fetch();
-await animate(`Connected\nReading Skills Assessment from Database... `, 20)
+await animate(`Done\nReading Skills Assessment from Database... `, 20)
 const doc = new GoogleSpreadsheet('1b0-tFXS_uABC7HGnLPXoRtf4Cl7JXz1lCWFRWrAZOEo', { apiKey: process.env.APIKEY })
 await doc.loadInfo();
 const sheet1 = doc.sheetsByTitle['Vesper'];
 await sheet1.loadCells('A1:F12');
-await animate(`Done\nObtaining Inventory Data... `, 10)
-// await ammoSheet.fetch();
-// await gearSheet.fetch();
-// await moneySheet.fetch();
-await animate(`Done\nReading Cyberdeck Drive 0 into RAM... `, 10)
-// await programsSheet.fetch();
 await animate(`Done\n`, 40)
 
 await (async (animations) => {
-  await animate(`Initializing Programs to RAM...\n`, 80)
+  await animate(`Initializing Live Biometric Feed...\n`, 80)
   await delay(20);
   screen.append(fakeLoadingBar);
   screen.render();
@@ -833,42 +825,21 @@ await (async (animations) => {
     fakeLoadingBar.progress(4)
     if (!init && fakeLoadingBar.filled > 60) {
       init = true;
-      loadingBox.content = `
-                        *                                                                       --
-                       ++                                                                       --
-                       *++                                                                     =-=
-                       ++++                                                                   --==
-                       ++++==                                                               .::-==
-                       ++=++===                                                            :..:-=+
-                        ++=====--                                                        ..::.-==+
-                          =====--:::                                                   :::::::-=
-                        += +==--:::..                                               .::::::--:  =+
-                        ====  =-:::::..                                            ..:::-::- :-===
-                         ====-- :::.::..:                                       :...::::-- ==--=+
-                          ====-=- -::::::::                                   ....:::-- =---==-=
-                           ===----- -:--:::..                               :...:::-= ====--===
-                             =-----:--:..:::....                          ::....::: =--===--=
-                           =-= ----:::.:::.:.....                       ......... -----==-- ==-
-                            --=-=---:::::::-.......                    ...:::..:::--=--= =--=-
-                             =------ ::-::::.:..      ::::     --:::     -:--::------ =====--
-                               =--:::: ::.:-.:.      ::::::::  :::::::   :.:::::-== ======
-                                ---::--: ::-::      ::::::::: -:-:::.:     ::::: =-======
-                                   -:-:::::-:.     -:::::::::-::::::::-    -::-++=-=---
-                                     -:-::: :::   :::::::::::::::.:::::-   --:=-==-=
-                                         :- :.:--- :-::::::::::::::::-- ---===-=-
-                                         --::-:--:-------:::::::-:::-==----==---=
-                                        -:- :::: ::---------:----:-----=--------=
-                                          --:::- -:----===---------= --=  -==-=-
-                                          =-:   ----==  ==-=----=---------   ===
-                                                ----=-=  =-----:-------=
-                                                   -=-==-==--  ---=----
-                                                       +==-=  --:--
-                                                       :-=-::--::--
-                                                        ---::---::
-                                                          --:::.:
-                                                          : :..-
-                                                          - :..
-                                                             :`;
+      loadingBox.content = `             =++*###+=====-.                    
+          :@@#=@***#=@@@@@@@@%**==              
+         .@@@@@@@@@@@@@@@@@@@@@-  *%-           
+         #@@@@@@@@@#@@@@@@@@@@@@@*. *@=:        
+        :@@@@@@@%:#@@@@@@@@@@@@@@@@@@@@@@@:.    
+        =@@@@@@:*@@@@@@@@@@@@@@@@@@@@@@@@@@@@-. 
+        -@@@@@@:@@@@@@@@@@@@@      #@@@@@@@@@@# 
+         @@@@@@:@@@@@@@@@@@=            @@@@@@  
+         @@@@@@ #@@@@@@@@@@:             %@@@=  
+         .@@@@:  *@@@@@@@@@#             *@+    
+          :%       ::*@@@@@@=           :%.     
+                        :%@@@#          .       
+                          *@@@@**-:-*           
+                       .+%@@@@@@@@@=            
+                          =======.              `;
     }
     screen.render();
   }
@@ -877,7 +848,7 @@ await (async (animations) => {
   screen.render();
 })()
 
-await delay(100);
+await delay(160);
 loadingBox.toggle();
 // console.log(sheet1.getCellByA1(`F7`).value)
 const pairs = skills.map((skill) => {
