@@ -69,6 +69,7 @@ function sheetFactory (range) {
 // #region Sheets
 let healthSheet = sheetFactory(`Vesper!C13:E13`);
 let armorSheet = sheetFactory(`Vesper!C14:D15`);
+let soloSheet = sheetFactory(`Vesper!I3:I8`);
 // #endregion
 
 // #region util functions
@@ -377,6 +378,35 @@ var inputBox = blessed.textbox({
   inputOnFocus: true,
   // content: inputPrompt,
 })
+
+const soloBox = blessed.listtable({
+  height: 11,
+  width: 34,
+  top: 'center',
+  left: 'center',
+  keys: true,
+  // width: '100%-6',
+  // columnWidths: [21, 5, 5],
+  // width: 'shrink',
+  // height: 'shrink',
+  border: {
+    type: 'line',
+    top: true,
+    bottom: true,
+    left: true,
+    right: true,
+  },
+  interactive: true,
+  vi: true,
+  style: {
+    cell: {
+      selected: {
+        bg: theme.listHighlight,
+      }
+    }
+  }
+})
+
 // #endregion
 
 // #region Constants
@@ -417,6 +447,15 @@ var skills = [
   ['Tactics', 'F10'],
   ['Tracking', 'F11'],
   ['Wilderness Survival', 'F12'],
+]
+
+const CombatAwareness = [
+  ['- incoming dmg', '2' , ' '],
+  ['no crit fail', '4' , ' '],
+  ['+ initiative', '1' , ' '],
+  ['+ to hit', '3' , ' '],
+  ['+ 1st damage', '1' , ' '],
+  ['+ perception', '1' , ' '],
 ]
 
 const inputPrompt = '$Valkyrie@Vesper>'
@@ -511,6 +550,12 @@ function updateHealth() {
   else {
     healthBar.style.bar.fg = 'white'
     healthBar.style.border.fg = 'white'
+  }
+}
+
+function updateSolo() {
+  for(let i = 0; i < 6; i++) {
+    CombatAwareness[i][2] = soloSheet.data.values[i][0]
   }
 }
 
@@ -626,7 +671,6 @@ async function repair(params) {
   } else {
     armorSheet.data.values[0][0] = armorSheet.data.values[0][1]
   }
-  fs.writeFileSync('debug',JSON.stringify(armorSheet.data))
   armorSheet.update()
   updateArmor()
   screen.render()
@@ -666,6 +710,86 @@ async function help() {
     }, 500);
     });
   })
+}
+
+async function solo(params) {
+  // let option = 'default'
+  // if (params && params[0]) { option = params[0] }
+  let result
+  let total = 0
+  for (let i = 0; i < 6; i++) {
+    total += Number(CombatAwareness[i][2]) * Number(CombatAwareness[i][1])
+  }
+  soloBox.setData([['Solo Skill', '$', 'pts'], ...CombatAwareness, ['---------','-','---'], ['Total','5',`${total}`]])
+  result = await new Promise((resolve,reject)=>{
+    soloBox.toggle()
+    soloBox.focus()
+    screen.render()
+    // notify('toasty',2500)
+    const tryIncrement = () => {
+      const index = soloBox.selected - 1;
+      if (index > 5) { return }
+      if (total + Number(CombatAwareness[index][1]) <= 5) {
+        CombatAwareness[index][2] = (Number(CombatAwareness[index][2]) + 1).toString();
+        total += Number(CombatAwareness[index][1]);
+        soloBox.setData([['Solo Skill', '$', 'pts'], ...CombatAwareness, ['---------','-','---'], ['Total','5',`${total}`]])
+        soloBox.selected = index + 1
+        screen.render()
+      }
+    }
+    const tryDecrement = () => {
+      const index = soloBox.selected - 1;
+      if (index > 5) { return }
+      if (CombatAwareness[index][2] !== ' ') {
+        CombatAwareness[index][2] = (Number(CombatAwareness[index][2]) - 1).toString();
+        if (CombatAwareness[index][2] == 0) { CombatAwareness[index][2] = ' '; }
+        total -= Number(CombatAwareness[index][1]);
+        soloBox.setData([['Solo Skill', '$', 'pts'], ...CombatAwareness, ['---------','-','---'], ['Total','5',`${total}`]])
+        soloBox.selected = index + 1
+        screen.render()
+      }
+    }
+    const selectHandler = (item, index) => { 
+      soloBox.removeListener('select', selectHandler)
+      soloBox.removeListener('q', exitHandler)
+      // soloBox.removeListener('+', tryIncrement);
+      // soloBox.removeListener('=', tryIncrement);
+      soloBox.removeListener('right', tryIncrement);
+      // soloBox.removeListener('-', tryDecrement);
+      // soloBox.removeListener('_', tryDecrement);
+      soloBox.removeListener('left', tryDecrement);
+      resolve({ item, index }) 
+    }
+    const exitHandler = () => { 
+      soloBox.removeListener('select', selectHandler)
+      soloBox.removeListener('q', exitHandler)
+      // soloBox.removeListener('+', tryIncrement);
+      // soloBox.removeListener('=', tryIncrement);
+      soloBox.removeListener('right', tryIncrement);
+      // soloBox.removeListener('-', tryDecrement);
+      // soloBox.removeListener('_', tryDecrement);
+      soloBox.removeListener('left', tryDecrement);
+      resolve(null) 
+    }
+    soloBox.once('select', selectHandler);
+    soloBox.key('q', exitHandler);
+    // soloBox.key('+', tryIncrement);
+    // soloBox.key('=', tryIncrement);
+    soloBox.key('right', tryIncrement);
+    // soloBox.key('-', tryDecrement);
+    // soloBox.key('_', tryDecrement);
+    soloBox.key('left', tryDecrement);
+  })
+  soloBox.toggle();
+  screen.render();
+  for (let i = 0; i < 6; i++) {
+    // fs.writeFileSync('debug',JSON.stringify(soloSheet.data.values))
+    soloSheet.data.values[i][0] = CombatAwareness[i][2]
+  }
+  soloSheet.update()
+  // switch (option) {
+  //   case 
+  // }
 }
 
 async function critical(params){
@@ -793,6 +917,9 @@ async function HandleCommand(fullMessage) {
     case 'crit':
       await critical(params);
       break;
+    case 'solo':
+      await solo(params);
+      break;
   }
 }
 
@@ -804,6 +931,8 @@ await animate(`\nInitializing Cyberpet Interface... `, 0)
 await auth.authorize();
 await animate(`{green-fg}OK{/green-fg}\nConnecting to biometrics... `, 20)
 await healthSheet.fetch();
+await soloSheet.fetch();
+updateSolo();
 await animate(`Done\nReading Subdermal Diagnostics... `, 20)
 await armorSheet.fetch();
 await animate(`Done\nReading Skills Assessment from Database... `, 20)
@@ -875,10 +1004,11 @@ screen.render();
 
 await delay(200);
 updateArmor();
-fs.writeFileSync('debug', JSON.stringify(armorSheet.data))
 screen.append(armorBox);
 screen.append(criticalInjuriesBox);
 criticalInjuriesBox.toggle();
+screen.append(soloBox);
+soloBox.toggle();
 screen.render();
 
 await delay(200);
