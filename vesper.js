@@ -742,7 +742,7 @@ async function solo(params) {
       if (index > 5) { return }
       if (CombatAwareness[index][2] !== ' ') {
         CombatAwareness[index][2] = (Number(CombatAwareness[index][2]) - 1).toString();
-        if (CombatAwareness[index][2] == 0) { CombatAwareness[index][2] = ' '; }
+        if (Number(CombatAwareness[index][2]) == 0) { CombatAwareness[index][2] = ' '; }
         total -= Number(CombatAwareness[index][1]);
         soloBox.setData([['Solo Skill', '$', 'pts'], ...CombatAwareness, ['---------','-','---'], ['Total','5',`${total}`]])
         soloBox.selected = index + 1
