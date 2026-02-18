@@ -8,9 +8,13 @@ import figlet from 'figlet';
 import { spawn, execSync } from 'child_process';
 
 let quickMode = false;
+let autoVesper = false;
 process.argv.forEach(function (val, index, array) {
   if (val === '-q') {
     quickMode = true;
+  }
+  else if (val === '-v') {
+    autoVesper = true;
   }
 });
 
@@ -1424,6 +1428,8 @@ screen.render();
 
 await delay(200);
 screen.append(inputBox)
-inputBox.focus();
 screen.render();
+
+if (autoVesper) { vesper() }
+inputBox.focus();
 // #endregion

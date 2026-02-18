@@ -2,4 +2,4 @@
 
 echo -e '\e[8;37;124t'
 
-node index.js
+node index.js "$@"
