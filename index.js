@@ -796,13 +796,38 @@ async function fire(params) {
 }
 
 async function repair(params) {
-  if ( params && params[0] === 'all') {
-    armorSheet.data.values[1][6] = armorSheet.data.values[1][0]
-    armorSheet.data.values[2][6] = armorSheet.data.values[2][0]
-  } else if (params && params[1] === 'head') {
-    armorSheet.data.values[1][6] = armorSheet.data.values[1][0]
-  } else {
-    armorSheet.data.values[2][6] = armorSheet.data.values[2][0]
+  let amount = 30
+  let location = 'all'
+  params.forEach((p) => {
+    if (!isNaN(p)){ amount = parseInt(p) }
+    else { 
+      switch(p.toLowerCase()){
+        case 'head':
+          location = 'head'
+          break;
+        case 'body':
+          location = 'body'
+          break;
+      }
+    }
+  })
+  const headMax = Number(armorSheet.data.values[1][0]);
+  const bodyMax = Number(armorSheet.data.values[2][0]);
+  const headCurrent = Number(armorSheet.data.values[1][6]);
+  const bodyCurrent = Number(armorSheet.data.values[2][6]);
+  if ( location === 'body' || location === 'all') {
+    if (amount + bodyCurrent > bodyMax) {
+      armorSheet.data.values[2][6] = bodyMax.toString();
+    } else {
+      armorSheet.data.values[2][6] = (bodyCurrent + amount).toString();
+    }
+  }
+  if ( location === 'head' || location === 'all') {
+    if (amount + headCurrent > headMax) {
+      armorSheet.data.values[1][6] = headMax.toString();
+    } else {
+      armorSheet.data.values[1][6] = (headCurrent + amount).toString();
+    }
   }
   armorSheet.update()
   updateArmor()
@@ -1042,12 +1067,12 @@ async function help() {
   let helpText = ''
   helpText += `exit - powers down cyberdeck\n`
   helpText += `refresh [full] - re-syncs with google sheet\n`
-  helpText += `hit <#> [head | brain] - applies a hit to the body or given\n`
-  helpText += `      area, considering and modifying armor as required\n`
+  helpText += `hit <#> [head | brain] [melee] [ap] - applies a hit to the\n`
+  helpText += `      body or given area, considering and modifying armor\n`
   helpText += `      aliases: damage; dmg\n`
   helpText += `crit add | rm | list | all - CRUD for critical injuries\n`
   helpText += `heal [<#> | full] - heals the given amount\n`
-  helpText += `repair [head | all] - fully repairs the body or given armor\n`
+  helpText += `repair [head | all] [<#>] - repairs the body or given armor\n`
   helpText += `fire [<#> | auto] - lowers ammo by RoF or given number\n`
   helpText += `      aliases: shoot\n`
   helpText += `equip - select a gun to be equipped\n`

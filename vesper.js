@@ -663,13 +663,38 @@ async function damage(params) {
 }
 
 async function repair(params) {
-  if ( params && params[0] === 'all') {
-    armorSheet.data.values[0][0] = armorSheet.data.values[0][1]
-    armorSheet.data.values[1][0] = armorSheet.data.values[1][1]
-  } else if (params && params[1] === 'head') {
-    armorSheet.data.values[1][0] = armorSheet.data.values[1][1]
-  } else {
-    armorSheet.data.values[0][0] = armorSheet.data.values[0][1]
+  let amount = 30
+  let location = 'all'
+  params.forEach((p) => {
+    if (!isNaN(p)){ amount = parseInt(p) }
+    else { 
+      switch(p.toLowerCase()){
+        case 'head':
+          location = 'head'
+          break;
+        case 'body':
+          location = 'body'
+          break;
+      }
+    }
+  })
+  const headMax = Number(armorSheet.data.values[1][1]);
+  const bodyMax = Number(armorSheet.data.values[0][1]);
+  const headCurrent = Number(armorSheet.data.values[1][0]);
+  const bodyCurrent = Number(armorSheet.data.values[0][0]);
+  if ( location === 'body' || location === 'all') {
+    if (amount + bodyCurrent > bodyMax) {
+      armorSheet.data.values[0][0] = bodyMax.toString();
+    } else {
+      armorSheet.data.values[0][0] = (bodyCurrent + amount).toString();
+    }
+  }
+  if ( location === 'head' || location === 'all') {
+    if (amount + headCurrent > headMax) {
+      armorSheet.data.values[1][0] = headMax.toString();
+    } else {
+      armorSheet.data.values[1][0] = (headCurrent + amount).toString();
+    }
   }
   armorSheet.update()
   updateArmor()
